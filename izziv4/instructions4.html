@@ -1,0 +1,374 @@
+<div id="question-651528-1" class="que coderunner adaptive_adapted_for_coderunner correct"><div class="info"><h3 class="no">Vprašanje <span class="qno">1</span></h3><div class="state">Pravilno</div><div class="grade">Točk 1,00 od 1,00</div><div class="questionflag editable" id="yui_3_17_2_1_1680276525036_25"><input type="hidden" name="q651528:1_:flagged" value="0"><input type="hidden" value="qaid=4279863&amp;qubaid=651528&amp;qid=176996&amp;slot=1&amp;checksum=4e1ebf284116c0e69e95b1692cbf9e26&amp;sesskey=jhvFgmJTW7&amp;newstate=" class="questionflagpostdata">
+    <input type="hidden" class="questionflagvalue" id="q651528:1_:flaggedcheckbox" name="q651528:1_:flagged" value="0"><a tabindex="0" class="aabtn" role="button" aria-pressed="false" aria-label="Označeno z zastavico" title="To vprašanje označite z zastavico za prihodnje potrebe"><img class="questionflagimage" src="https://ucilnica.fri.uni-lj.si/theme/image.php/boost/core/1670156578/i/unflagged" alt="">Vprašanje z zastavico</a></div></div><div class="content"><div class="formulation clearfix"><h4 class="accesshide">Besedilo vprašanja</h4><input type="hidden" name="q651528:1_:sequencecheck" value="7"><p>Napišite program, ki tabelo 32 bitnih celih števil uredi glede na število bitov, ki so enaki 1 v dvojiški predstavitvi tega števila.</p>
+    <p>Npr. tabela <code>6 5 4 1 3</code> bi bila urejena <code>4 1 6 5 3</code>, ker <code>4 = 100</code>, <code>1 = 1</code>, <code>6 = 110</code>, <code>5 = 101</code> in <code>3 = 11</code>. Števila, ki imajo enako število enic ostanejo v istem vrstnem redu kot pred urejanjem.</p>
+    <p>Za urejanje uporabite stabilno urejanje s štetjem (counting sort). Na standardnem vhodu boste najprej prejeli dolžino tabele <code>n</code>, za tem pa <code>n</code> celih števil.</p>
+    <p>Na standardni izhod izpisujete potek vpisovanja elementov v končno (urejeno tabelo). Za vsak zapis zapišete v eni vrstici par <code>(el, pos)</code>, kjer je <code>el</code> število, ki ga zapisujete, <code>pos</code> pa indeks v tabeli kamor ta element zapisujete. V zadnji vrstici izpišite še urejeno tabelo ločeno s presledki.</p><p class="for-example-para">For example:</p><div class="coderunner-examples"><table class="coderunnerexamples">
+    <thead>
+    <tr>
+    <th class="header c0" style="" scope="col">Input</th>
+    <th class="header c1 lastcol" style="" scope="col">Result</th>
+    </tr>
+    </thead>
+    <tbody><tr class="r0 lastrow">
+    <td class="cell c0" style=""><pre class="tablecell">5
+    6 5 4 1 3</pre></td>
+    <td class="cell c1 lastcol" style=""><pre class="tablecell">(3,4)
+    (1,1)
+    (4,0)
+    (5,3)
+    (6,2)
+    4 1 6 5 3</pre></td>
+    </tr>
+    </tbody>
+    </table>
+    </div><div class="prompt"><label class="answerprompt" for="id_q651528:1_answer">Answer:</label><span class="penaltyregime">(penalty regime: 0 %)</span></div><textarea class="coderunner-answer edit_code" name="q651528:1_answer" id="id_q651528:1_answer" spellcheck="false" rows="18" data-params="{}" data-lang="Java" data-test0="" readonly="" style="display: none;">import java.util.Scanner;
+    
+    class prog{
+        public static void main(String[] args) {
+            //branje vhoda
+            Scanner npc = new Scanner(System.in);
+            int n = npc.nextInt();
+            int[] tabela = new int[n];
+            for(int i=0; i&lt;n; i++){
+                tabela[i] = npc.nextInt();
+            }
+            npc.close();
+    
+            //urejanje
+            tabela = counting_sort_bit_num(tabela);
+            for(int i=0; i&lt;tabela.length; i++){
+                System.out.printf("%d%s",tabela[i],i==tabela.length-1 ? "" : " ");
+            }
+        }
+    
+        public static int st_bitov(int st){
+            //vrne stevilo bitov enakh 1 v dvojiski predstavitvi
+            int rez = 0;
+            String binarni = Integer.toBinaryString(st);
+            for(int i=0; i&lt;binarni.length(); i++){
+                if(binarni.charAt(i) == '1') rez++;
+            }
+            return rez;
+        }
+    
+        public static int[] counting_sort_bit_num(int[] tabela){
+            //uredi tabelo po stevilu bitov z urejanjem s stetjem
+            
+            //ta naloga rabi, da se elemente za vstavljanje v koncno tabelo iz originalne tabele jemlje od desne proti levi
+            int[] c = new int[32];
+            for(int i=0; i&lt;tabela.length; i++){
+                c[st_bitov(tabela[i])]++;
+            }
+            int[] c2 = new int[32];
+            for(int i=1; i&lt;32; i++){
+                c[i] += c[i-1];
+            }
+            int[] nova_tabela = new int[tabela.length];
+            for(int i=tabela.length-1; i&gt;=0; i--){
+                int index = c[st_bitov(tabela[i])]-- -1;
+                nova_tabela[index] = tabela[i];
+                System.out.printf("(%d,%d)\n",tabela[i],index);
+            }
+    
+            /*
+            //pravilen in logicen postopek - od leve proti desni (kot na vajah)
+            int[] c = new int[32];
+            for(int i=0; i&lt;tabela.length; i++){
+                c[st_bitov(tabela[i])]++;
+            }
+            int[] c2 = new int[32];
+            for(int i=0; i&lt;32-2; i++){
+                c2[i+1] = c[i] + c2[i];
+            }
+            int[] nova_tabela = new int[tabela.length];
+            //String[] izpisi = new String[tabela.length];
+            for(int i=0; i&lt;tabela.length; i++){
+                int index = c2[st_bitov(tabela[i])]++;
+                nova_tabela[index] = tabela[i];
+                //izpisi[i] = String.format("(%d,%d)\n",tabela[i],index);
+                System.out.printf("(%d,%d)\n",tabela[i],index);
+            }
+            
+            //for(int i=tabela.length-1; i&gt;=0; i--){
+            //    System.out.printf(izpisi[i]);
+            //}
+            */
+            return nova_tabela;
+        }
+    }</textarea><div id="id_q651528:1_answer_wrapper" class="ui_wrapper" style="resize: vertical; overflow: hidden; min-height: 411px; width: 100%; border: 1px solid darkgrey;"><div class=" ace_editor ace-tm" style="resize: none; height: 395px; width: 505.094px;"><textarea class="ace_text-input" wrap="off" autocorrect="off" autocapitalize="off" spellcheck="false" readonly="" style="opacity: 0; font-size: 1px; height: 1px; width: 1px; top: 18px; left: 54px;" id="ace_id_q651528:1_answer"></textarea><div class="ace_gutter moodle-has-zindex" aria-hidden="true" style="left: 0px; width: 51px;"><div class="ace_layer ace_gutter-layer ace_folding-enabled" style="height: 1e+06px; top: 0px; left: 0px; width: 51px;"><div class="ace_gutter-cell ace_gutter-active-line " style="height: 18px; top: 0px;">1<span style="display: inline-block; height: 18px;" class="ace_fold-widget ace_start ace_open"></span></div><div class="ace_gutter-cell " style="height: 18px; top: 18px;">2<span style="display: none;"></span></div><div class="ace_gutter-cell " style="height: 18px; top: 36px;">3<span style="display: inline-block; height: 18px;" class="ace_fold-widget ace_start ace_open"></span></div><div class="ace_gutter-cell " style="height: 18px; top: 54px;">4<span style="display: inline-block; height: 18px;" class="ace_fold-widget ace_start ace_open"></span></div><div class="ace_gutter-cell " style="height: 18px; top: 72px;">5<span style="display: none;"></span></div><div class="ace_gutter-cell " style="height: 18px; top: 90px;">6<span style="display: none;"></span></div><div class="ace_gutter-cell " style="height: 18px; top: 108px;">7<span style="display: none;"></span></div><div class="ace_gutter-cell " style="height: 18px; top: 126px;">8<span style="display: none;"></span></div><div class="ace_gutter-cell " style="height: 18px; top: 144px;">9<span style="display: inline-block; height: 18px;" class="ace_fold-widget ace_start ace_open"></span></div><div class="ace_gutter-cell " style="height: 18px; top: 162px;">10<span style="display: none;"></span></div><div class="ace_gutter-cell " style="height: 18px; top: 180px;">11<span style="display: none;"></span></div><div class="ace_gutter-cell " style="height: 18px; top: 198px;">12<span style="display: none;"></span></div><div class="ace_gutter-cell " style="height: 18px; top: 216px;">13<span style="display: none;"></span></div><div class="ace_gutter-cell " style="height: 18px; top: 234px;">14<span style="display: none;"></span></div><div class="ace_gutter-cell " style="height: 18px; top: 252px;">15<span style="display: none;"></span></div><div class="ace_gutter-cell " style="height: 18px; top: 270px;">16<span style="display: inline-block; height: 18px;" class="ace_fold-widget ace_start ace_open"></span></div><div class="ace_gutter-cell " style="height: 18px; top: 288px;">17<span style="display: none;"></span></div><div class="ace_gutter-cell " style="height: 18px; top: 306px;">18<span style="display: none;"></span></div><div class="ace_gutter-cell " style="height: 18px; top: 324px;">19<span style="display: none;"></span></div><div class="ace_gutter-cell " style="height: 18px; top: 342px;">20<span style="display: none;"></span></div><div class="ace_gutter-cell " style="height: 18px; top: 360px;">21<span style="display: inline-block; height: 18px;" class="ace_fold-widget ace_start ace_open"></span></div><div class="ace_gutter-cell " style="height: 18px; top: 378px;">22<span style="display: none;"></span></div><div class="ace_gutter-cell " style="height: 18px; top: 396px;">23<span style="display: none;"></span></div></div></div><div class="ace_scroller" style="line-height: 18px; left: 50.4141px; right: 17px; bottom: 0px;"><div class="ace_content" style="top: 0px; left: 0px; width: 985px; height: 414px;"><div class="ace_layer ace_print-margin-layer"><div class="ace_print-margin" style="left: 661px; visibility: visible;"></div></div><div class="ace_layer ace_marker-layer"><div class="ace_active-line" style="height: 18px; top: 0px; left: 0px; right: 0px;"></div></div><div class="ace_layer ace_text-layer" style="height: 1e+06px; margin: 0px 4px; top: 0px; left: 0px;"><div class="ace_line" style="height: 18px; top: 0px;"><span class="ace_keyword">import</span> <span class="ace_identifier">java</span>.<span class="ace_identifier">util</span>.<span class="ace_identifier">Scanner</span>;</div><div class="ace_line" style="height: 18px; top: 18px;"></div><div class="ace_line" style="height: 18px; top: 36px;"><span class="ace_keyword">class</span> <span class="ace_identifier">prog</span>{</div><div class="ace_line" style="height: 18px; top: 54px;">    <span class="ace_keyword">public</span> <span class="ace_keyword">static</span> <span class="ace_keyword">void</span> <span class="ace_identifier">main</span>(<span class="ace_support ace_function">String</span>[] <span class="ace_identifier">args</span>) {</div><div class="ace_line" style="height: 18px; top: 72px;"><span class="ace_indent-guide">    </span>    <span class="ace_comment">//branje vhoda</span></div><div class="ace_line" style="height: 18px; top: 90px;"><span class="ace_indent-guide">    </span>    <span class="ace_identifier">Scanner</span> <span class="ace_identifier">npc</span> <span class="ace_keyword ace_operator">=</span> <span class="ace_keyword">new</span> <span class="ace_identifier">Scanner</span>(<span class="ace_support ace_function">System</span>.<span class="ace_identifier">in</span>);</div><div class="ace_line" style="height: 18px; top: 108px;"><span class="ace_indent-guide">    </span>    <span class="ace_keyword">int</span> <span class="ace_identifier">n</span> <span class="ace_keyword ace_operator">=</span> <span class="ace_identifier">npc</span>.<span class="ace_identifier">nextInt</span>();</div><div class="ace_line" style="height: 18px; top: 126px;"><span class="ace_indent-guide">    </span>    <span class="ace_keyword">int</span>[] <span class="ace_identifier">tabela</span> <span class="ace_keyword ace_operator">=</span> <span class="ace_keyword">new</span> <span class="ace_keyword">int</span>[<span class="ace_identifier">n</span>];</div><div class="ace_line" style="height: 18px; top: 144px;"><span class="ace_indent-guide">    </span>    <span class="ace_keyword">for</span>(<span class="ace_keyword">int</span> <span class="ace_identifier">i</span><span class="ace_keyword ace_operator">=</span><span class="ace_constant ace_numeric">0</span>; <span class="ace_identifier">i</span><span class="ace_keyword ace_operator">&lt;</span><span class="ace_identifier">n</span>; <span class="ace_identifier">i</span><span class="ace_keyword ace_operator">++</span>){</div><div class="ace_line" style="height: 18px; top: 162px;"><span class="ace_indent-guide">    </span><span class="ace_indent-guide">    </span>    <span class="ace_identifier">tabela</span>[<span class="ace_identifier">i</span>] <span class="ace_keyword ace_operator">=</span> <span class="ace_identifier">npc</span>.<span class="ace_identifier">nextInt</span>();</div><div class="ace_line" style="height: 18px; top: 180px;"><span class="ace_indent-guide">    </span>    }</div><div class="ace_line" style="height: 18px; top: 198px;"><span class="ace_indent-guide">    </span>    <span class="ace_identifier">npc</span>.<span class="ace_identifier">close</span>();</div><div class="ace_line" style="height: 18px; top: 216px;"></div><div class="ace_line" style="height: 18px; top: 234px;"><span class="ace_indent-guide">    </span>    <span class="ace_comment">//urejanje</span></div><div class="ace_line" style="height: 18px; top: 252px;"><span class="ace_indent-guide">    </span>    <span class="ace_identifier">tabela</span> <span class="ace_keyword ace_operator">=</span> <span class="ace_identifier">counting_sort_bit_num</span>(<span class="ace_identifier">tabela</span>);</div><div class="ace_line" style="height: 18px; top: 270px;"><span class="ace_indent-guide">    </span>    <span class="ace_keyword">for</span>(<span class="ace_keyword">int</span> <span class="ace_identifier">i</span><span class="ace_keyword ace_operator">=</span><span class="ace_constant ace_numeric">0</span>; <span class="ace_identifier">i</span><span class="ace_keyword ace_operator">&lt;</span><span class="ace_identifier">tabela</span>.<span class="ace_identifier">length</span>; <span class="ace_identifier">i</span><span class="ace_keyword ace_operator">++</span>){</div><div class="ace_line" style="height: 18px; top: 288px;"><span class="ace_indent-guide">    </span><span class="ace_indent-guide">    </span>    <span class="ace_support ace_function">System</span>.<span class="ace_identifier">out</span>.<span class="ace_identifier">printf</span>(<span class="ace_string">"%d%s"</span>,<span class="ace_identifier">tabela</span>[<span class="ace_identifier">i</span>],<span class="ace_identifier">i</span><span class="ace_keyword ace_operator">==</span><span class="ace_identifier">tabela</span>.<span class="ace_identifier">length</span><span class="ace_constant ace_numeric">-1</span> <span class="ace_keyword ace_operator">?</span> <span class="ace_string">""</span> <span class="ace_keyword ace_operator">:</span> <span class="ace_string">" "</span>);</div><div class="ace_line" style="height: 18px; top: 306px;"><span class="ace_indent-guide">    </span>    }</div><div class="ace_line" style="height: 18px; top: 324px;">    }</div><div class="ace_line" style="height: 18px; top: 342px;"></div><div class="ace_line" style="height: 18px; top: 360px;">    <span class="ace_keyword">public</span> <span class="ace_keyword">static</span> <span class="ace_keyword">int</span> <span class="ace_identifier">st_bitov</span>(<span class="ace_keyword">int</span> <span class="ace_identifier">st</span>){</div><div class="ace_line" style="height: 18px; top: 378px;"><span class="ace_indent-guide">    </span>    <span class="ace_comment">//vrne stevilo bitov enakh 1 v dvojiski predstavitvi</span></div></div><div class="ace_layer ace_marker-layer"></div><div class="ace_layer ace_cursor-layer ace_hidden-cursors"><div class="ace_cursor" style="display: block; top: 0px; left: 4px; width: 8px; height: 18px;"></div></div></div></div><div class="ace_scrollbar ace_scrollbar-v" style="width: 22px; bottom: 17px;"><div class="ace_scrollbar-inner" style="width: 22px; height: 1350px;">&nbsp;</div></div><div class="ace_scrollbar ace_scrollbar-h" style="height: 22px; left: 50.4141px; right: 17px;"><div class="ace_scrollbar-inner" style="height: 22px; width: 985px;">&nbsp;</div></div><div style="height: auto; width: auto; top: 0px; left: 0px; visibility: hidden; position: absolute; white-space: pre; font: inherit; overflow: hidden;"><div style="height: auto; width: auto; top: 0px; left: 0px; visibility: hidden; position: absolute; white-space: pre; font: inherit; overflow: visible;">הההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההה</div><div style="height: auto; width: auto; top: 0px; left: 0px; visibility: hidden; position: absolute; white-space: pre; font-style: inherit; font-variant: inherit; font-stretch: inherit; font-size: inherit; line-height: inherit; font-family: inherit; font-optical-sizing: inherit; font-kerning: inherit; font-feature-settings: inherit; font-variation-settings: inherit; overflow: visible;">XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX</div></div></div></div><div class="im-controls"><div class="d-flex"></div></div></div><div class="outcome clearfix"><h4 class="accesshide">Pripombe</h4><div class="feedback"><div class="specificfeedback"><div class="coderunner-test-results good"><table class="coderunner-test-results">
+    <thead>
+    <tr>
+    <td class="header c0" style=""></td>
+    <th class="header c1" style="" scope="col">Input</th>
+    <th class="header c2" style="" scope="col">Expected</th>
+    <th class="header c3" style="" scope="col">Got</th>
+    <td class="header c4 lastcol" style=""></td>
+    </tr>
+    </thead>
+    <tbody><tr class="r1">
+    <td class="cell c0" style=""><i class="icon fa fa-check text-success fa-fw " title="Pravilno" role="img" aria-label="Pravilno"></i></td>
+    <td class="cell c1" style=""><pre class="tablecell">8
+    8 7 6 5 4 3 2 1</pre></td>
+    <td class="cell c2" style=""><pre class="tablecell">(1,3)
+    (2,2)
+    (3,6)
+    (4,1)
+    (5,5)
+    (6,4)
+    (7,7)
+    (8,0)
+    8 4 2 1 6 5 3 7</pre></td>
+    <td class="cell c3" style=""><pre class="tablecell">(1,3)
+    (2,2)
+    (3,6)
+    (4,1)
+    (5,5)
+    (6,4)
+    (7,7)
+    (8,0)
+    8 4 2 1 6 5 3 7</pre></td>
+    <td class="cell c4 lastcol" style=""><i class="icon fa fa-check text-success fa-fw " title="Pravilno" role="img" aria-label="Pravilno"></i></td>
+    </tr>
+    <tr class="r0">
+    <td class="cell c0" style=""><i class="icon fa fa-check text-success fa-fw " title="Pravilno" role="img" aria-label="Pravilno"></i></td>
+    <td class="cell c1" style=""><pre class="tablecell">10
+    820 37 908 764 797 460 641 719 704 636</pre></td>
+    <td class="cell c2" style=""><pre class="tablecell">(636,7)
+    (704,2)
+    (719,9)
+    (641,1)
+    (460,5)
+    (797,6)
+    (764,8)
+    (908,4)
+    (37,0)
+    (820,3)
+    37 641 704 820 908 460 797 636 764 719</pre></td>
+    <td class="cell c3" style=""><pre class="tablecell">(636,7)
+    (704,2)
+    (719,9)
+    (641,1)
+    (460,5)
+    (797,6)
+    (764,8)
+    (908,4)
+    (37,0)
+    (820,3)
+    37 641 704 820 908 460 797 636 764 719</pre></td>
+    <td class="cell c4 lastcol" style=""><i class="icon fa fa-check text-success fa-fw " title="Pravilno" role="img" aria-label="Pravilno"></i></td>
+    </tr>
+    <tr class="r1">
+    <td class="cell c0" style=""><i class="icon fa fa-check text-success fa-fw " title="Pravilno" role="img" aria-label="Pravilno"></i></td>
+    <td class="cell c1" style=""><pre class="tablecell">15
+    703 224 248 924 122 727 495 440 462 89 107 879 626 568 405</pre></td>
+    <td class="cell c2" style=""><pre class="tablecell">(405,8)
+    (568,2)
+    (626,7)
+    (879,14)
+    (107,6)
+    (89,1)
+    (462,10)
+    (440,5)
+    (495,13)
+    (727,11)
+    (122,4)
+    (924,9)
+    (248,3)
+    (224,0)
+    (703,12)
+    224 89 568 248 122 440 107 626 405 924 462 727 703 495 879</pre></td>
+    <td class="cell c3" style=""><pre class="tablecell">(405,8)
+    (568,2)
+    (626,7)
+    (879,14)
+    (107,6)
+    (89,1)
+    (462,10)
+    (440,5)
+    (495,13)
+    (727,11)
+    (122,4)
+    (924,9)
+    (248,3)
+    (224,0)
+    (703,12)
+    224 89 568 248 122 440 107 626 405 924 462 727 703 495 879</pre></td>
+    <td class="cell c4 lastcol" style=""><i class="icon fa fa-check text-success fa-fw " title="Pravilno" role="img" aria-label="Pravilno"></i></td>
+    </tr>
+    <tr class="r0">
+    <td class="cell c0" style=""><i class="icon fa fa-check text-success fa-fw " title="Pravilno" role="img" aria-label="Pravilno"></i></td>
+    <td class="cell c1" style=""><pre class="tablecell">20
+    381 435 567 206 342 217 175 508 18 158 374 773 711 685 358 516 687 732 703 613</pre></td>
+    <td class="cell c2" style=""><pre class="tablecell">(613,8)
+    (703,19)
+    (732,15)
+    (687,18)
+    (516,1)
+    (358,7)
+    (685,14)
+    (711,13)
+    (773,2)
+    (374,12)
+    (158,6)
+    (18,0)
+    (508,17)
+    (175,11)
+    (217,5)
+    (342,4)
+    (206,3)
+    (567,10)
+    (435,9)
+    (381,16)
+    18 516 773 206 342 217 158 358 613 435 567 175 374 711 685 732 381 508 687 703</pre></td>
+    <td class="cell c3" style=""><pre class="tablecell">(613,8)
+    (703,19)
+    (732,15)
+    (687,18)
+    (516,1)
+    (358,7)
+    (685,14)
+    (711,13)
+    (773,2)
+    (374,12)
+    (158,6)
+    (18,0)
+    (508,17)
+    (175,11)
+    (217,5)
+    (342,4)
+    (206,3)
+    (567,10)
+    (435,9)
+    (381,16)
+    18 516 773 206 342 217 158 358 613 435 567 175 374 711 685 732 381 508 687 703</pre></td>
+    <td class="cell c4 lastcol" style=""><i class="icon fa fa-check text-success fa-fw " title="Pravilno" role="img" aria-label="Pravilno"></i></td>
+    </tr>
+    <tr class="r1">
+    <td class="cell c0" style=""><i class="icon fa fa-check text-success fa-fw " title="Pravilno" role="img" aria-label="Pravilno"></i></td>
+    <td class="cell c1" style=""><pre class="tablecell">30
+    231 725 216 534 174 77 783 969 820 234 299 812 70 949 800 125 891 916 229 908 60 138 911 989 973 144 506 542 278 932</pre></td>
+    <td class="cell c2" style=""><pre class="tablecell">(932,18)
+    (278,8)
+    (542,17)
+    (506,27)
+    (144,0)
+    (973,26)
+    (989,29)
+    (911,25)
+    (138,3)
+    (60,7)
+    (908,16)
+    (229,15)
+    (916,14)
+    (891,28)
+    (125,23)
+    (800,2)
+    (949,24)
+    (70,1)
+    (812,13)
+    (299,12)
+    (234,11)
+    (820,10)
+    (969,22)
+    (783,21)
+    (77,6)
+    (174,9)
+    (534,5)
+    (216,4)
+    (725,20)
+    (231,19)
+    144 70 800 138 216 534 77 60 278 174 820 234 299 812 916 229 908 542 932 231 725 783 969 125 949 911 973 506 891 989</pre></td>
+    <td class="cell c3" style=""><pre class="tablecell">(932,18)
+    (278,8)
+    (542,17)
+    (506,27)
+    (144,0)
+    (973,26)
+    (989,29)
+    (911,25)
+    (138,3)
+    (60,7)
+    (908,16)
+    (229,15)
+    (916,14)
+    (891,28)
+    (125,23)
+    (800,2)
+    (949,24)
+    (70,1)
+    (812,13)
+    (299,12)
+    (234,11)
+    (820,10)
+    (969,22)
+    (783,21)
+    (77,6)
+    (174,9)
+    (534,5)
+    (216,4)
+    (725,20)
+    (231,19)
+    144 70 800 138 216 534 77 60 278 174 820 234 299 812 916 229 908 542 932 231 725 783 969 125 949 911 973 506 891 989</pre></td>
+    <td class="cell c4 lastcol" style=""><i class="icon fa fa-check text-success fa-fw " title="Pravilno" role="img" aria-label="Pravilno"></i></td>
+    </tr>
+    <tr class="r0 lastrow">
+    <td class="cell c0" style=""><i class="icon fa fa-check text-success fa-fw " title="Pravilno" role="img" aria-label="Pravilno"></i></td>
+    <td class="cell c1" style=""><pre class="tablecell">5
+    6 5 4 1 3</pre></td>
+    <td class="cell c2" style=""><pre class="tablecell">(3,4)
+    (1,1)
+    (4,0)
+    (5,3)
+    (6,2)
+    4 1 6 5 3</pre></td>
+    <td class="cell c3" style=""><pre class="tablecell">(3,4)
+    (1,1)
+    (4,0)
+    (5,3)
+    (6,2)
+    4 1 6 5 3</pre></td>
+    <td class="cell c4 lastcol" style=""><i class="icon fa fa-check text-success fa-fw " title="Pravilno" role="img" aria-label="Pravilno"></i></td>
+    </tr>
+    </tbody>
+    </table>
+    <p>Passed all tests! &nbsp;<i class="icon fa fa-check text-success fa-fw " title="Pravilno" role="img" aria-label="Pravilno"></i></p></div></div><div class="rightanswer"><div class="sample code"><h4>Question author's solution (Java):</h4><textarea class="coderunner-answer edit_code" name="q651528:1_sampleanswer" id="id_q651528:1_sampleanswer" spellcheck="false" rows="18" data-params="{}" data-lang="Java" data-test0="" readonly="" style="display: none;">import java.util.Scanner;
+    
+    public class Izziv4 {
+    
+      private static int[] countingSort(int[] a){
+          int[] result = new int[a.length];
+          int[] counts = new int[33];
+          for (int i : a)
+              counts[Integer.bitCount(i)]++;
+    
+          int cumSum = 0;
+          for (int i=0; i&lt;33 ; i++ ) {
+            cumSum += counts[i];
+              counts[i] = cumSum-1;
+          }
+    
+          for (int i = a.length-1; i&gt;= 0 ; i--) {
+              int pos = Integer.bitCount(a[i]);
+              result[counts[pos]] = a[i];
+              System.out.println("("+a[i]+","+counts[pos]+")");
+              counts[pos]--;
+          }
+          return result;
+      }
+    
+    
+      public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        int n = sc.nextInt();
+        int[] a = new int[n];
+        for (int i = 0; i &lt; n ; i++ )
+            a[i] = sc.nextInt();
+    
+        a = countingSort(a);
+    
+        for (int i : a )
+            System.out.print(i+" ");
+    
+      }
+    }
+    </textarea><div id="id_q651528:1_sampleanswer_wrapper" class="ui_wrapper" style="resize: vertical; overflow: hidden; min-height: 411px; width: 100%; border: 1px solid darkgrey;"><div class=" ace_editor ace-tm" style="resize: none; height: 395px; width: 505.094px;"><textarea class="ace_text-input" wrap="off" autocorrect="off" autocapitalize="off" spellcheck="false" readonly="" style="opacity: 0; font-size: 1px; height: 1px; width: 1px; top: 18px; left: 54px;" id="ace_id_q651528:1_sampleanswer"></textarea><div class="ace_gutter moodle-has-zindex" aria-hidden="true" style="left: 0px; width: 51px;"><div class="ace_layer ace_gutter-layer ace_folding-enabled" style="height: 1e+06px; top: 0px; left: 0px; width: 51px;"><div class="ace_gutter-cell ace_gutter-active-line " style="height: 18px; top: 0px;">1<span style="display: inline-block; height: 18px;" class="ace_fold-widget ace_start ace_open"></span></div><div class="ace_gutter-cell " style="height: 18px; top: 18px;">2<span style="display: none;"></span></div><div class="ace_gutter-cell " style="height: 18px; top: 36px;">3<span style="display: inline-block; height: 18px;" class="ace_fold-widget ace_start ace_open"></span></div><div class="ace_gutter-cell " style="height: 18px; top: 54px;">4<span style="display: none;"></span></div><div class="ace_gutter-cell " style="height: 18px; top: 72px;">5<span style="display: inline-block; height: 18px;" class="ace_fold-widget ace_start ace_open"></span></div><div class="ace_gutter-cell " style="height: 18px; top: 90px;">6<span style="display: none;"></span></div><div class="ace_gutter-cell " style="height: 18px; top: 108px;">7<span style="display: none;"></span></div><div class="ace_gutter-cell " style="height: 18px; top: 126px;">8<span style="display: none;"></span></div><div class="ace_gutter-cell " style="height: 18px; top: 144px;">9<span style="display: none;"></span></div><div class="ace_gutter-cell " style="height: 18px; top: 162px;">10<span style="display: none;"></span></div><div class="ace_gutter-cell " style="height: 18px; top: 180px;">11<span style="display: none;"></span></div><div class="ace_gutter-cell " style="height: 18px; top: 198px;">12<span style="display: inline-block; height: 18px;" class="ace_fold-widget ace_start ace_open"></span></div><div class="ace_gutter-cell " style="height: 18px; top: 216px;">13<span style="display: none;"></span></div><div class="ace_gutter-cell " style="height: 18px; top: 234px;">14<span style="display: none;"></span></div><div class="ace_gutter-cell " style="height: 18px; top: 252px;">15<span style="display: none;"></span></div><div class="ace_gutter-cell " style="height: 18px; top: 270px;">16<span style="display: none;"></span></div><div class="ace_gutter-cell " style="height: 18px; top: 288px;">17<span style="display: inline-block; height: 18px;" class="ace_fold-widget ace_start ace_open"></span></div><div class="ace_gutter-cell " style="height: 18px; top: 306px;">18<span style="display: none;"></span></div><div class="ace_gutter-cell " style="height: 18px; top: 324px;">19<span style="display: none;"></span></div><div class="ace_gutter-cell " style="height: 18px; top: 342px;">20<span style="display: none;"></span></div><div class="ace_gutter-cell " style="height: 18px; top: 360px;">21<span style="display: none;"></span></div><div class="ace_gutter-cell " style="height: 18px; top: 378px;">22<span style="display: none;"></span></div><div class="ace_gutter-cell " style="height: 18px; top: 396px;">23<span style="display: none;"></span></div></div></div><div class="ace_scroller" style="line-height: 18px; left: 50.4141px; right: 17px; bottom: 0px;"><div class="ace_content" style="top: 0px; left: 0px; width: 492px; height: 414px;"><div class="ace_layer ace_print-margin-layer"><div class="ace_print-margin" style="left: 661px; visibility: visible;"></div></div><div class="ace_layer ace_marker-layer"><div class="ace_active-line" style="height: 18px; top: 0px; left: 0px; right: 0px;"></div></div><div class="ace_layer ace_text-layer" style="height: 1e+06px; margin: 0px 4px; top: 0px; left: 0px;"><div class="ace_line" style="height: 18px; top: 0px;"><span class="ace_keyword">import</span> <span class="ace_identifier">java</span>.<span class="ace_identifier">util</span>.<span class="ace_identifier">Scanner</span>;</div><div class="ace_line" style="height: 18px; top: 18px;"></div><div class="ace_line" style="height: 18px; top: 36px;"><span class="ace_keyword">public</span> <span class="ace_keyword">class</span> <span class="ace_identifier">Izziv4</span> {</div><div class="ace_line" style="height: 18px; top: 54px;"></div><div class="ace_line" style="height: 18px; top: 72px;">  <span class="ace_keyword">private</span> <span class="ace_keyword">static</span> <span class="ace_keyword">int</span>[] <span class="ace_identifier">countingSort</span>(<span class="ace_keyword">int</span>[] <span class="ace_identifier">a</span>){</div><div class="ace_line" style="height: 18px; top: 90px;">      <span class="ace_keyword">int</span>[] <span class="ace_identifier">result</span> <span class="ace_keyword ace_operator">=</span> <span class="ace_keyword">new</span> <span class="ace_keyword">int</span>[<span class="ace_identifier">a</span>.<span class="ace_identifier">length</span>];</div><div class="ace_line" style="height: 18px; top: 108px;">      <span class="ace_keyword">int</span>[] <span class="ace_identifier">counts</span> <span class="ace_keyword ace_operator">=</span> <span class="ace_keyword">new</span> <span class="ace_keyword">int</span>[<span class="ace_constant ace_numeric">33</span>];</div><div class="ace_line" style="height: 18px; top: 126px;">      <span class="ace_keyword">for</span> (<span class="ace_keyword">int</span> <span class="ace_identifier">i</span> <span class="ace_keyword ace_operator">:</span> <span class="ace_identifier">a</span>)</div><div class="ace_line" style="height: 18px; top: 144px;">        <span class="ace_identifier">counts</span>[<span class="ace_support ace_function">Integer</span>.<span class="ace_identifier">bitCount</span>(<span class="ace_identifier">i</span>)]<span class="ace_keyword ace_operator">++</span>;</div><div class="ace_line" style="height: 18px; top: 162px;"></div><div class="ace_line" style="height: 18px; top: 180px;">      <span class="ace_keyword">int</span> <span class="ace_identifier">cumSum</span> <span class="ace_keyword ace_operator">=</span> <span class="ace_constant ace_numeric">0</span>;</div><div class="ace_line" style="height: 18px; top: 198px;">      <span class="ace_keyword">for</span> (<span class="ace_keyword">int</span> <span class="ace_identifier">i</span><span class="ace_keyword ace_operator">=</span><span class="ace_constant ace_numeric">0</span>; <span class="ace_identifier">i</span><span class="ace_keyword ace_operator">&lt;</span><span class="ace_constant ace_numeric">33</span> ; <span class="ace_identifier">i</span><span class="ace_keyword ace_operator">++</span> ) {</div><div class="ace_line" style="height: 18px; top: 216px;"><span class="ace_indent-guide">    </span>    <span class="ace_identifier">cumSum</span> <span class="ace_keyword ace_operator">+=</span> <span class="ace_identifier">counts</span>[<span class="ace_identifier">i</span>];</div><div class="ace_line" style="height: 18px; top: 234px;">        <span class="ace_identifier">counts</span>[<span class="ace_identifier">i</span>] <span class="ace_keyword ace_operator">=</span> <span class="ace_identifier">cumSum</span><span class="ace_constant ace_numeric">-1</span>;</div><div class="ace_line" style="height: 18px; top: 252px;">      }</div><div class="ace_line" style="height: 18px; top: 270px;"></div><div class="ace_line" style="height: 18px; top: 288px;">      <span class="ace_keyword">for</span> (<span class="ace_keyword">int</span> <span class="ace_identifier">i</span> <span class="ace_keyword ace_operator">=</span> <span class="ace_identifier">a</span>.<span class="ace_identifier">length</span><span class="ace_constant ace_numeric">-1</span>; <span class="ace_identifier">i</span><span class="ace_keyword ace_operator">&gt;=</span> <span class="ace_constant ace_numeric">0</span> ; <span class="ace_identifier">i</span><span class="ace_keyword ace_operator">--</span>) {</div><div class="ace_line" style="height: 18px; top: 306px;"><span class="ace_indent-guide">    </span>      <span class="ace_keyword">int</span> <span class="ace_identifier">pos</span> <span class="ace_keyword ace_operator">=</span> <span class="ace_support ace_function">Integer</span>.<span class="ace_identifier">bitCount</span>(<span class="ace_identifier">a</span>[<span class="ace_identifier">i</span>]);</div><div class="ace_line" style="height: 18px; top: 324px;"><span class="ace_indent-guide">    </span>      <span class="ace_identifier">result</span>[<span class="ace_identifier">counts</span>[<span class="ace_identifier">pos</span>]] <span class="ace_keyword ace_operator">=</span> <span class="ace_identifier">a</span>[<span class="ace_identifier">i</span>];</div><div class="ace_line" style="height: 18px; top: 342px;"><span class="ace_indent-guide">    </span>      <span class="ace_support ace_function">System</span>.<span class="ace_identifier">out</span>.<span class="ace_identifier">println</span>(<span class="ace_string">"("</span><span class="ace_keyword ace_operator">+</span><span class="ace_identifier">a</span>[<span class="ace_identifier">i</span>]<span class="ace_keyword ace_operator">+</span><span class="ace_string">","</span><span class="ace_keyword ace_operator">+</span><span class="ace_identifier">counts</span>[<span class="ace_identifier">pos</span>]<span class="ace_keyword ace_operator">+</span><span class="ace_string">")"</span>);</div><div class="ace_line" style="height: 18px; top: 360px;"><span class="ace_indent-guide">    </span>      <span class="ace_identifier">counts</span>[<span class="ace_identifier">pos</span>]<span class="ace_keyword ace_operator">--</span>;</div><div class="ace_line" style="height: 18px; top: 378px;">      }</div></div><div class="ace_layer ace_marker-layer"></div><div class="ace_layer ace_cursor-layer ace_hidden-cursors"><div class="ace_cursor" style="display: block; top: 0px; left: 4px; width: 8px; height: 18px;"></div></div></div></div><div class="ace_scrollbar ace_scrollbar-v" style="width: 22px; bottom: 17px;"><div class="ace_scrollbar-inner" style="width: 22px; height: 738px;">&nbsp;</div></div><div class="ace_scrollbar ace_scrollbar-h" style="height: 22px; left: 50.4141px; right: 17px;"><div class="ace_scrollbar-inner" style="height: 22px; width: 492px;">&nbsp;</div></div><div style="height: auto; width: auto; top: 0px; left: 0px; visibility: hidden; position: absolute; white-space: pre; font: inherit; overflow: hidden;"><div style="height: auto; width: auto; top: 0px; left: 0px; visibility: hidden; position: absolute; white-space: pre; font: inherit; overflow: visible;">הההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההה</div><div style="height: auto; width: auto; top: 0px; left: 0px; visibility: hidden; position: absolute; white-space: pre; font-style: inherit; font-variant: inherit; font-stretch: inherit; font-size: inherit; line-height: inherit; font-family: inherit; font-optical-sizing: inherit; font-kerning: inherit; font-feature-settings: inherit; font-variation-settings: inherit; overflow: visible;">XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX</div></div></div></div></div></div></div><div class="im-feedback"><div class="correctness badge correct">Pravilno</div><div class="gradingdetails">Točke za ta prispevek: 1,00/1,00.</div></div></div></div></div>

@@ -1,0 +1,377 @@
+<div id="question-647383-1" class="que coderunner adaptive_adapted_for_coderunner correct"><div class="info"><h3 class="no">Vprašanje <span class="qno">1</span></h3><div class="state">Pravilno</div><div class="grade">Točk 1,00 od 1,00</div><div class="questionflag editable" id="yui_3_17_2_1_1680276309864_25"><input type="hidden" name="q647383:1_:flagged" value="0"><input type="hidden" value="qaid=4239667&amp;qubaid=647383&amp;qid=173254&amp;slot=1&amp;checksum=1972cef09b5fc7ca0fc8105b018779d6&amp;sesskey=jhvFgmJTW7&amp;newstate=" class="questionflagpostdata">
+    <input type="hidden" class="questionflagvalue" id="q647383:1_:flaggedcheckbox" name="q647383:1_:flagged" value="0"><a tabindex="0" class="aabtn" role="button" aria-pressed="false" aria-label="Označeno z zastavico" title="To vprašanje označite z zastavico za prihodnje potrebe"><img class="questionflagimage" src="https://ucilnica.fri.uni-lj.si/theme/image.php/boost/core/1670156578/i/unflagged" alt="">Vprašanje z zastavico</a></div></div><div class="content"><div class="formulation clearfix"><h4 class="accesshide">Besedilo vprašanja</h4><input type="hidden" name="q647383:1_:sequencecheck" value="7"><p>Napišite program, ki na standardnem vhodu najprej dobi dolžino tabele <code>n</code>, nato pa iz preostanka standardnega vhoda prebere tabelo celih števil dolžine <code>n</code>.</p>
+    <p>Prebrano tabelo uredite s kopico.</p>
+    <p>Izpisujte&nbsp;<strong>sled algoritma</strong>&nbsp;na naslednji način:</p>
+    <ul>
+    <li>vsakič, ko imate v tabeli pravo kopico jo izpišite (po gradnji kopice, nato pa po vsakem pogrezanju),</li>
+    <li>vsako kopico izpišite v svojo vrstico,</li>
+    <li>kopico izpišite tako, da vsak nivo drevesa ločite z navpično črto. Primer: <code>7 | 6 5 | 4 3 2</code>, predstavlja kopico, ki ima v korenu 7, na prvem nivoju števili 6 in 5, na zadnjem pa 4, 3 in 2.</li>
+    </ul>
+    <p><strong>Nasvet:&nbsp;</strong>Metodo za <a class="autolink" title="Urejanje s kopico" href="https://ucilnica.fri.uni-lj.si/mod/resource/view.php?id=19463">urejanje s kopico</a> implementirajte postopoma:</p>
+    <ul>
+    <li>Najprej implementirajte metodo za pogrezanje, ki delno pokvarjeno kopico popravi (za podrobnosti glej predavanja). Metodo dobro pretestirajte, saj na njej temelji celoten nadaljnji postopek. Podpis te metode je sledeči: <code>void pogrezni(int a[], int i, int dolzKopice)</code>, pri čemer je <code>a</code> tabela v kateri pogrezamo, <code>i</code> je indeks elementa, ki ga pogrezamo in <code>dolzKopice</code> je dolzina podtabele, ki trenutno predstavlja kopico.</li>
+    <li>Nato implementirajte metodo, ki iz poljubne tabele zgradi veljavno kopico (seveda z uporabo metode razvite v predhodni točki).</li>
+    <li>Nazadnje uporabite prej definirani metodi za ureditev poljubne tabele s kopico.</li>
+    </ul><p class="for-example-para">For example:</p><div class="coderunner-examples"><table class="coderunnerexamples">
+    <thead>
+    <tr>
+    <th class="header c0" style="" scope="col">Input</th>
+    <th class="header c1 lastcol" style="" scope="col">Result</th>
+    </tr>
+    </thead>
+    <tbody><tr class="r0 lastrow">
+    <td class="cell c0" style=""><pre class="tablecell">8
+    0 13 0 6 15 22 7 9
+    </pre></td>
+    <td class="cell c1 lastcol" style=""><pre class="tablecell">22 | 15 7 | 9 13 0 0 | 6
+    15 | 13 7 | 9 6 0 0
+    13 | 9 7 | 0 6 0
+    9 | 6 7 | 0 0
+    7 | 6 0 | 0
+    6 | 0 0
+    0 | 0
+    0
+    </pre></td>
+    </tr>
+    </tbody>
+    </table>
+    </div><div class="prompt"><label class="answerprompt" for="id_q647383:1_answer">Answer:</label><span class="penaltyregime">(penalty regime: 0 %)</span></div><textarea class="coderunner-answer edit_code" name="q647383:1_answer" id="id_q647383:1_answer" spellcheck="false" rows="18" data-params="{}" data-globalextra="" data-lang="Java" data-test0="" readonly="" style="display: none;">import java.util.Scanner;
+    
+    class prog{
+        public static void main(String[] args){
+            // branje n in tabele
+            Scanner joze = new Scanner(System.in);
+            int n = joze.nextInt();
+            int[] tabela = new int[n];
+            for(int i=0; i&lt;n; i++){
+                tabela[i] = joze.nextInt();
+            }
+            joze.close();
+    
+            /*//  popravljanje kopice tabele
+            for(int i=n/2 - 1; i&gt;=0; i--){
+                pogrezni(tabela, i, n);
+            }*/
+    
+            for(int iter=0; iter&lt;n; iter++){
+                int dolzina = n-iter;
+                for(int i=dolzina/2 - 1; i&gt;=0; i--){
+                    pogrezni(tabela, i, dolzina);
+                }
+                //izpis 
+                boolean konec1 = false;
+                for(int p=0; p&lt;=((int) (Math.log(dolzina)/(Math.log(2)))); p++){
+                    for(int i = (int)Math.pow(2,p) - 1; i&lt;(int) Math.pow(2,p+1) - 1; i++){
+                        System.out.printf("%d",tabela[i]);
+                        if(i==dolzina-1) konec1 = true;
+                        if(!konec1){
+                            System.out.printf(" ");
+                        }
+                        else break;
+                    }
+                    if(!konec1) System.out.printf("| ");
+                }
+                System.out.println();
+    
+                int temp = tabela[0];
+                tabela[0] = tabela[dolzina-1];
+                tabela[dolzina-1] = temp;
+                
+    
+            }
+    
+            
+        }
+    
+        public static void pogrezni(int a[], int i, int dolzKopice){
+            //za max kopico
+    
+            if(2*i+1 &gt;= dolzKopice) return; //list je urejena kopica
+            if(2*i+2 &gt;= dolzKopice &amp;&amp; 2*i+1 &lt; dolzKopice){
+                //samo levi sin
+                if(a[i] &lt; a[2*i+1]){
+                    //menjamo z levim sinom
+                    int temp = a[i];
+                    a[i] = a[2*i+1];
+                    a[2*i+1] = temp;
+                    pogrezni(a, 2*i+1, dolzKopice);
+                }
+                else return;
+            }
+    
+            else if(a[i] &gt; a[2*i+1] &amp;&amp; a[i] &gt; a[2*i+2]) return; //vecje od obeh -&gt; ok kopica
+    
+            else if(a[i] &lt; a[2*i+1] &amp;&amp; a[i] &lt; a[2*i+2]){
+                //manjsi od obeh -&gt; menjamo z vecjim
+                if(a[2*i+1] &gt;= a[2*i+2]){
+                    //menjamo z levim sinom
+                    int temp = a[i];
+                    a[i] = a[2*i+1];
+                    a[2*i+1] = temp;
+                    pogrezni(a, 2*i+1, dolzKopice);
+                }
+                else{
+                    //menjamo z desnim sinom
+                    int temp = a[i];
+                    a[i] = a[2*i+2];
+                    a[2*i+2] = temp;
+                    pogrezni(a, 2*i+2, dolzKopice);
+                }
+            }
+            else if(a[i] &lt; a[2*i+1]){
+                //menjamo z levim sinom
+                int temp = a[i];
+                a[i] = a[2*i+1];
+                a[2*i+1] = temp;
+                pogrezni(a, 2*i+1, dolzKopice);
+            }
+            else if(a[i] &lt; a[2*i+2]){
+                //menjamo z desnim sinom
+                int temp = a[i];
+                a[i] = a[2*i+2];
+                a[2*i+2] = temp;
+                pogrezni(a, 2*i+2, dolzKopice);
+            }
+    
+            return;
+        }
+    }</textarea><div id="id_q647383:1_answer_wrapper" class="ui_wrapper" style="resize: vertical; overflow: hidden; min-height: 411px; width: 100%; border: 1px solid darkgrey;"><div class=" ace_editor ace-tm" style="resize: none; height: 395px; width: 505.094px;"><textarea class="ace_text-input" wrap="off" autocorrect="off" autocapitalize="off" spellcheck="false" readonly="" style="opacity: 0; font-size: 1px; height: 1px; width: 1px; top: 18px; left: 54px;" id="ace_id_q647383:1_answer"></textarea><div class="ace_gutter moodle-has-zindex" aria-hidden="true" style="left: 0px; width: 51px;"><div class="ace_layer ace_gutter-layer ace_folding-enabled" style="height: 1e+06px; top: 0px; left: 0px; width: 51px;"><div class="ace_gutter-cell ace_gutter-active-line " style="height: 18px; top: 0px;">1<span style="display: inline-block; height: 18px;" class="ace_fold-widget ace_start ace_open"></span></div><div class="ace_gutter-cell " style="height: 18px; top: 18px;">2<span style="display: none;"></span></div><div class="ace_gutter-cell " style="height: 18px; top: 36px;">3<span style="display: inline-block; height: 18px;" class="ace_fold-widget ace_start ace_open"></span></div><div class="ace_gutter-cell " style="height: 18px; top: 54px;">4<span style="display: inline-block; height: 18px;" class="ace_fold-widget ace_start ace_open"></span></div><div class="ace_gutter-cell " style="height: 18px; top: 72px;">5<span style="display: none;"></span></div><div class="ace_gutter-cell " style="height: 18px; top: 90px;">6<span style="display: none;"></span></div><div class="ace_gutter-cell " style="height: 18px; top: 108px;">7<span style="display: none;"></span></div><div class="ace_gutter-cell " style="height: 18px; top: 126px;">8<span style="display: none;"></span></div><div class="ace_gutter-cell " style="height: 18px; top: 144px;">9<span style="display: inline-block; height: 18px;" class="ace_fold-widget ace_start ace_open"></span></div><div class="ace_gutter-cell " style="height: 18px; top: 162px;">10<span style="display: none;"></span></div><div class="ace_gutter-cell " style="height: 18px; top: 180px;">11<span style="display: none;"></span></div><div class="ace_gutter-cell " style="height: 18px; top: 198px;">12<span style="display: none;"></span></div><div class="ace_gutter-cell " style="height: 18px; top: 216px;">13<span style="display: none;"></span></div><div class="ace_gutter-cell " style="height: 18px; top: 234px;">14<span style="display: inline-block; height: 18px;" class="ace_fold-widget ace_start ace_open"></span></div><div class="ace_gutter-cell " style="height: 18px; top: 252px;">15<span style="display: inline-block; height: 18px;" class="ace_fold-widget ace_start ace_open"></span></div><div class="ace_gutter-cell " style="height: 18px; top: 270px;">16<span style="display: none;"></span></div><div class="ace_gutter-cell " style="height: 18px; top: 288px;">17<span style="display: none;"></span></div><div class="ace_gutter-cell " style="height: 18px; top: 306px;">18<span style="display: none;"></span></div><div class="ace_gutter-cell " style="height: 18px; top: 324px;">19<span style="display: inline-block; height: 18px;" class="ace_fold-widget ace_start ace_open"></span></div><div class="ace_gutter-cell " style="height: 18px; top: 342px;">20<span style="display: none;"></span></div><div class="ace_gutter-cell " style="height: 18px; top: 360px;">21<span style="display: inline-block; height: 18px;" class="ace_fold-widget ace_start ace_open"></span></div><div class="ace_gutter-cell " style="height: 18px; top: 378px;">22<span style="display: none;"></span></div><div class="ace_gutter-cell " style="height: 18px; top: 396px;">23<span style="display: none;"></span></div></div></div><div class="ace_scroller" style="line-height: 18px; left: 50.4141px; right: 17px; bottom: 0px;"><div class="ace_content" style="top: 0px; left: 0px; width: 730px; height: 414px;"><div class="ace_layer ace_print-margin-layer"><div class="ace_print-margin" style="left: 661px; visibility: visible;"></div></div><div class="ace_layer ace_marker-layer"><div class="ace_active-line" style="height: 18px; top: 0px; left: 0px; right: 0px;"></div></div><div class="ace_layer ace_text-layer" style="height: 1e+06px; margin: 0px 4px; top: 0px; left: 0px;"><div class="ace_line" style="height: 18px; top: 0px;"><span class="ace_keyword">import</span> <span class="ace_identifier">java</span>.<span class="ace_identifier">util</span>.<span class="ace_identifier">Scanner</span>;</div><div class="ace_line" style="height: 18px; top: 18px;"></div><div class="ace_line" style="height: 18px; top: 36px;"><span class="ace_keyword">class</span> <span class="ace_identifier">prog</span>{</div><div class="ace_line" style="height: 18px; top: 54px;">    <span class="ace_keyword">public</span> <span class="ace_keyword">static</span> <span class="ace_keyword">void</span> <span class="ace_identifier">main</span>(<span class="ace_support ace_function">String</span>[] <span class="ace_identifier">args</span>){</div><div class="ace_line" style="height: 18px; top: 72px;"><span class="ace_indent-guide">    </span>    <span class="ace_comment">// branje n in tabele</span></div><div class="ace_line" style="height: 18px; top: 90px;"><span class="ace_indent-guide">    </span>    <span class="ace_identifier">Scanner</span> <span class="ace_identifier">joze</span> <span class="ace_keyword ace_operator">=</span> <span class="ace_keyword">new</span> <span class="ace_identifier">Scanner</span>(<span class="ace_support ace_function">System</span>.<span class="ace_identifier">in</span>);</div><div class="ace_line" style="height: 18px; top: 108px;"><span class="ace_indent-guide">    </span>    <span class="ace_keyword">int</span> <span class="ace_identifier">n</span> <span class="ace_keyword ace_operator">=</span> <span class="ace_identifier">joze</span>.<span class="ace_identifier">nextInt</span>();</div><div class="ace_line" style="height: 18px; top: 126px;"><span class="ace_indent-guide">    </span>    <span class="ace_keyword">int</span>[] <span class="ace_identifier">tabela</span> <span class="ace_keyword ace_operator">=</span> <span class="ace_keyword">new</span> <span class="ace_keyword">int</span>[<span class="ace_identifier">n</span>];</div><div class="ace_line" style="height: 18px; top: 144px;"><span class="ace_indent-guide">    </span>    <span class="ace_keyword">for</span>(<span class="ace_keyword">int</span> <span class="ace_identifier">i</span><span class="ace_keyword ace_operator">=</span><span class="ace_constant ace_numeric">0</span>; <span class="ace_identifier">i</span><span class="ace_keyword ace_operator">&lt;</span><span class="ace_identifier">n</span>; <span class="ace_identifier">i</span><span class="ace_keyword ace_operator">++</span>){</div><div class="ace_line" style="height: 18px; top: 162px;"><span class="ace_indent-guide">    </span><span class="ace_indent-guide">    </span>    <span class="ace_identifier">tabela</span>[<span class="ace_identifier">i</span>] <span class="ace_keyword ace_operator">=</span> <span class="ace_identifier">joze</span>.<span class="ace_identifier">nextInt</span>();</div><div class="ace_line" style="height: 18px; top: 180px;"><span class="ace_indent-guide">    </span>    }</div><div class="ace_line" style="height: 18px; top: 198px;"><span class="ace_indent-guide">    </span>    <span class="ace_identifier">joze</span>.<span class="ace_identifier">close</span>();</div><div class="ace_line" style="height: 18px; top: 216px;"></div><div class="ace_line" style="height: 18px; top: 234px;"><span class="ace_indent-guide">    </span>    <span class="ace_comment">/*//  popravljanje kopice tabele</span></div><div class="ace_line" style="height: 18px; top: 252px;"><span class="ace_indent-guide">    </span><span class="ace_comment">    for(int i=n/2 - 1; i&gt;=0; i--){</span></div><div class="ace_line" style="height: 18px; top: 270px;"><span class="ace_indent-guide">    </span><span class="ace_indent-guide">    </span><span class="ace_comment">    pogrezni(tabela, i, n);</span></div><div class="ace_line" style="height: 18px; top: 288px;"><span class="ace_indent-guide">    </span><span class="ace_comment">    }*/</span></div><div class="ace_line" style="height: 18px; top: 306px;"></div><div class="ace_line" style="height: 18px; top: 324px;"><span class="ace_indent-guide">    </span>    <span class="ace_keyword">for</span>(<span class="ace_keyword">int</span> <span class="ace_identifier">iter</span><span class="ace_keyword ace_operator">=</span><span class="ace_constant ace_numeric">0</span>; <span class="ace_identifier">iter</span><span class="ace_keyword ace_operator">&lt;</span><span class="ace_identifier">n</span>; <span class="ace_identifier">iter</span><span class="ace_keyword ace_operator">++</span>){</div><div class="ace_line" style="height: 18px; top: 342px;"><span class="ace_indent-guide">    </span><span class="ace_indent-guide">    </span>    <span class="ace_keyword">int</span> <span class="ace_identifier">dolzina</span> <span class="ace_keyword ace_operator">=</span> <span class="ace_identifier">n</span><span class="ace_keyword ace_operator">-</span><span class="ace_identifier">iter</span>;</div><div class="ace_line" style="height: 18px; top: 360px;"><span class="ace_indent-guide">    </span><span class="ace_indent-guide">    </span>    <span class="ace_keyword">for</span>(<span class="ace_keyword">int</span> <span class="ace_identifier">i</span><span class="ace_keyword ace_operator">=</span><span class="ace_identifier">dolzina</span><span class="ace_keyword ace_operator">/</span><span class="ace_constant ace_numeric">2</span> <span class="ace_keyword ace_operator">-</span> <span class="ace_constant ace_numeric">1</span>; <span class="ace_identifier">i</span><span class="ace_keyword ace_operator">&gt;=</span><span class="ace_constant ace_numeric">0</span>; <span class="ace_identifier">i</span><span class="ace_keyword ace_operator">--</span>){</div><div class="ace_line" style="height: 18px; top: 378px;"><span class="ace_indent-guide">    </span><span class="ace_indent-guide">    </span><span class="ace_indent-guide">    </span>    <span class="ace_identifier">pogrezni</span>(<span class="ace_identifier">tabela</span>, <span class="ace_identifier">i</span>, <span class="ace_identifier">dolzina</span>);</div></div><div class="ace_layer ace_marker-layer"></div><div class="ace_layer ace_cursor-layer ace_hidden-cursors"><div class="ace_cursor" style="display: block; top: 0px; left: 4px; width: 8px; height: 18px;"></div></div></div></div><div class="ace_scrollbar ace_scrollbar-v" style="width: 22px; bottom: 17px;"><div class="ace_scrollbar-inner" style="width: 22px; height: 1818px;">&nbsp;</div></div><div class="ace_scrollbar ace_scrollbar-h" style="height: 22px; left: 50.4141px; right: 17px;"><div class="ace_scrollbar-inner" style="height: 22px; width: 730px;">&nbsp;</div></div><div style="height: auto; width: auto; top: 0px; left: 0px; visibility: hidden; position: absolute; white-space: pre; font: inherit; overflow: hidden;"><div style="height: auto; width: auto; top: 0px; left: 0px; visibility: hidden; position: absolute; white-space: pre; font: inherit; overflow: visible;">הההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההה</div><div style="height: auto; width: auto; top: 0px; left: 0px; visibility: hidden; position: absolute; white-space: pre; font-style: inherit; font-variant: inherit; font-stretch: inherit; font-size: inherit; line-height: inherit; font-family: inherit; font-optical-sizing: inherit; font-kerning: inherit; font-feature-settings: inherit; font-variation-settings: inherit; overflow: visible;">XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX</div></div></div></div><div class="im-controls"><div class="d-flex"></div></div></div><div class="outcome clearfix"><h4 class="accesshide">Pripombe</h4><div class="feedback"><div class="specificfeedback"><div class="coderunner-test-results good"><table class="coderunner-test-results">
+    <thead>
+    <tr>
+    <td class="header c0" style=""></td>
+    <th class="header c1" style="" scope="col">Input</th>
+    <th class="header c2" style="" scope="col">Expected</th>
+    <th class="header c3" style="" scope="col">Got</th>
+    <td class="header c4 lastcol" style=""></td>
+    </tr>
+    </thead>
+    <tbody><tr class="r1">
+    <td class="cell c0" style=""><i class="icon fa fa-check text-success fa-fw " title="Pravilno" role="img" aria-label="Pravilno"></i></td>
+    <td class="cell c1" style=""><pre class="tablecell">8
+    0 13 0 6 15 22 7 9</pre></td>
+    <td class="cell c2" style=""><pre class="tablecell">22 | 15 7 | 9 13 0 0 | 6
+    15 | 13 7 | 9 6 0 0
+    13 | 9 7 | 0 6 0
+    9 | 6 7 | 0 0
+    7 | 6 0 | 0
+    6 | 0 0
+    0 | 0
+    0</pre></td>
+    <td class="cell c3" style=""><pre class="tablecell">22 | 15 7 | 9 13 0 0 | 6
+    15 | 13 7 | 9 6 0 0
+    13 | 9 7 | 0 6 0
+    9 | 6 7 | 0 0
+    7 | 6 0 | 0
+    6 | 0 0
+    0 | 0
+    0</pre></td>
+    <td class="cell c4 lastcol" style=""><i class="icon fa fa-check text-success fa-fw " title="Pravilno" role="img" aria-label="Pravilno"></i></td>
+    </tr>
+    <tr class="r0">
+    <td class="cell c0" style=""><i class="icon fa fa-check text-success fa-fw " title="Pravilno" role="img" aria-label="Pravilno"></i></td>
+    <td class="cell c1" style=""><pre class="tablecell">10
+    26 22 28 27 29 13 28 27 10 17</pre></td>
+    <td class="cell c2" style=""><pre class="tablecell">29 | 27 28 | 27 22 13 28 | 26 10 17
+    28 | 27 28 | 27 22 13 17 | 26 10
+    28 | 27 17 | 27 22 13 10 | 26
+    27 | 27 17 | 26 22 13 10
+    27 | 26 17 | 10 22 13
+    26 | 22 17 | 10 13
+    22 | 13 17 | 10
+    17 | 13 10
+    13 | 10
+    10</pre></td>
+    <td class="cell c3" style=""><pre class="tablecell">29 | 27 28 | 27 22 13 28 | 26 10 17
+    28 | 27 28 | 27 22 13 17 | 26 10
+    28 | 27 17 | 27 22 13 10 | 26
+    27 | 27 17 | 26 22 13 10
+    27 | 26 17 | 10 22 13
+    26 | 22 17 | 10 13
+    22 | 13 17 | 10
+    17 | 13 10
+    13 | 10
+    10</pre></td>
+    <td class="cell c4 lastcol" style=""><i class="icon fa fa-check text-success fa-fw " title="Pravilno" role="img" aria-label="Pravilno"></i></td>
+    </tr>
+    <tr class="r1">
+    <td class="cell c0" style=""><i class="icon fa fa-check text-success fa-fw " title="Pravilno" role="img" aria-label="Pravilno"></i></td>
+    <td class="cell c1" style=""><pre class="tablecell">12
+    31 7 6 2 5 1 13 11 18 14 12 12</pre></td>
+    <td class="cell c2" style=""><pre class="tablecell">31 | 18 13 | 11 14 12 6 | 7 2 5 12 1
+    18 | 14 13 | 11 12 12 6 | 7 2 5 1
+    14 | 12 13 | 11 5 12 6 | 7 2 1
+    13 | 12 12 | 11 5 1 6 | 7 2
+    12 | 11 12 | 7 5 1 6 | 2
+    12 | 11 6 | 7 5 1 2
+    11 | 7 6 | 2 5 1
+    7 | 5 6 | 2 1
+    6 | 5 1 | 2
+    5 | 2 1
+    2 | 1
+    1</pre></td>
+    <td class="cell c3" style=""><pre class="tablecell">31 | 18 13 | 11 14 12 6 | 7 2 5 12 1
+    18 | 14 13 | 11 12 12 6 | 7 2 5 1
+    14 | 12 13 | 11 5 12 6 | 7 2 1
+    13 | 12 12 | 11 5 1 6 | 7 2
+    12 | 11 12 | 7 5 1 6 | 2
+    12 | 11 6 | 7 5 1 2
+    11 | 7 6 | 2 5 1
+    7 | 5 6 | 2 1
+    6 | 5 1 | 2
+    5 | 2 1
+    2 | 1
+    1</pre></td>
+    <td class="cell c4 lastcol" style=""><i class="icon fa fa-check text-success fa-fw " title="Pravilno" role="img" aria-label="Pravilno"></i></td>
+    </tr>
+    <tr class="r0">
+    <td class="cell c0" style=""><i class="icon fa fa-check text-success fa-fw " title="Pravilno" role="img" aria-label="Pravilno"></i></td>
+    <td class="cell c1" style=""><pre class="tablecell">15
+    40 14 3 1 34 34 16 18 11 22 32 28 40 15 21</pre></td>
+    <td class="cell c2" style=""><pre class="tablecell">40 | 34 40 | 18 32 34 21 | 1 11 22 14 28 3 15 16
+    40 | 34 34 | 18 32 28 21 | 1 11 22 14 16 3 15
+    34 | 32 34 | 18 22 28 21 | 1 11 15 14 16 3
+    34 | 32 28 | 18 22 16 21 | 1 11 15 14 3
+    32 | 22 28 | 18 15 16 21 | 1 11 3 14
+    28 | 22 21 | 18 15 16 14 | 1 11 3
+    22 | 18 21 | 11 15 16 14 | 1 3
+    21 | 18 16 | 11 15 3 14 | 1
+    18 | 15 16 | 11 1 3 14
+    16 | 15 14 | 11 1 3
+    15 | 11 14 | 3 1
+    14 | 11 1 | 3
+    11 | 3 1
+    3 | 1
+    1</pre></td>
+    <td class="cell c3" style=""><pre class="tablecell">40 | 34 40 | 18 32 34 21 | 1 11 22 14 28 3 15 16
+    40 | 34 34 | 18 32 28 21 | 1 11 22 14 16 3 15
+    34 | 32 34 | 18 22 28 21 | 1 11 15 14 16 3
+    34 | 32 28 | 18 22 16 21 | 1 11 15 14 3
+    32 | 22 28 | 18 15 16 21 | 1 11 3 14
+    28 | 22 21 | 18 15 16 14 | 1 11 3
+    22 | 18 21 | 11 15 16 14 | 1 3
+    21 | 18 16 | 11 15 3 14 | 1
+    18 | 15 16 | 11 1 3 14
+    16 | 15 14 | 11 1 3
+    15 | 11 14 | 3 1
+    14 | 11 1 | 3
+    11 | 3 1
+    3 | 1
+    1</pre></td>
+    <td class="cell c4 lastcol" style=""><i class="icon fa fa-check text-success fa-fw " title="Pravilno" role="img" aria-label="Pravilno"></i></td>
+    </tr>
+    <tr class="r1 lastrow">
+    <td class="cell c0" style=""><i class="icon fa fa-check text-success fa-fw " title="Pravilno" role="img" aria-label="Pravilno"></i></td>
+    <td class="cell c1" style=""><pre class="tablecell">20
+    17 17 45 41 32 22 35 6 34 57 18 52 2 30 57 35 5 28 29 6</pre></td>
+    <td class="cell c2" style=""><pre class="tablecell">57 | 41 57 | 35 32 52 45 | 17 34 17 18 22 2 30 35 | 6 5 28 29 6
+    57 | 41 52 | 35 32 22 45 | 17 34 17 18 6 2 30 35 | 6 5 28 29
+    52 | 41 45 | 35 32 22 35 | 17 34 17 18 6 2 30 29 | 6 5 28
+    45 | 41 35 | 35 32 22 30 | 17 34 17 18 6 2 28 29 | 6 5
+    41 | 35 35 | 34 32 22 30 | 17 5 17 18 6 2 28 29 | 6
+    35 | 34 35 | 17 32 22 30 | 6 5 17 18 6 2 28 29
+    35 | 34 30 | 17 32 22 29 | 6 5 17 18 6 2 28
+    34 | 32 30 | 17 28 22 29 | 6 5 17 18 6 2
+    32 | 28 30 | 17 18 22 29 | 6 5 17 2 6
+    30 | 28 29 | 17 18 22 6 | 6 5 17 2
+    29 | 28 22 | 17 18 2 6 | 6 5 17
+    28 | 18 22 | 17 17 2 6 | 6 5
+    22 | 18 6 | 17 17 2 5 | 6
+    18 | 17 6 | 6 17 2 5
+    17 | 17 6 | 6 5 2
+    17 | 6 6 | 2 5
+    6 | 5 6 | 2
+    6 | 5 2
+    5 | 2
+    2</pre></td>
+    <td class="cell c3" style=""><pre class="tablecell">57 | 41 57 | 35 32 52 45 | 17 34 17 18 22 2 30 35 | 6 5 28 29 6
+    57 | 41 52 | 35 32 22 45 | 17 34 17 18 6 2 30 35 | 6 5 28 29
+    52 | 41 45 | 35 32 22 35 | 17 34 17 18 6 2 30 29 | 6 5 28
+    45 | 41 35 | 35 32 22 30 | 17 34 17 18 6 2 28 29 | 6 5
+    41 | 35 35 | 34 32 22 30 | 17 5 17 18 6 2 28 29 | 6
+    35 | 34 35 | 17 32 22 30 | 6 5 17 18 6 2 28 29
+    35 | 34 30 | 17 32 22 29 | 6 5 17 18 6 2 28
+    34 | 32 30 | 17 28 22 29 | 6 5 17 18 6 2
+    32 | 28 30 | 17 18 22 29 | 6 5 17 2 6
+    30 | 28 29 | 17 18 22 6 | 6 5 17 2
+    29 | 28 22 | 17 18 2 6 | 6 5 17
+    28 | 18 22 | 17 17 2 6 | 6 5
+    22 | 18 6 | 17 17 2 5 | 6
+    18 | 17 6 | 6 17 2 5
+    17 | 17 6 | 6 5 2
+    17 | 6 6 | 2 5
+    6 | 5 6 | 2
+    6 | 5 2
+    5 | 2
+    2</pre></td>
+    <td class="cell c4 lastcol" style=""><i class="icon fa fa-check text-success fa-fw " title="Pravilno" role="img" aria-label="Pravilno"></i></td>
+    </tr>
+    </tbody>
+    </table>
+    <p>Passed all tests! &nbsp;<i class="icon fa fa-check text-success fa-fw " title="Pravilno" role="img" aria-label="Pravilno"></i></p></div></div><div class="rightanswer"><div class="sample code"><h4>Question author's solution (Java):</h4><textarea class="coderunner-answer edit_code" name="q647383:1_sampleanswer" id="id_q647383:1_sampleanswer" spellcheck="false" rows="18" data-params="{}" data-globalextra="" data-lang="Java" data-test0="" readonly="" style="display: none;">import java.util.Scanner;
+    
+    public class Izziv2 {
+      public static void dump_heap(int n, int a[]) {
+        System.out.print(a[0]);
+    
+        for (int i = 1, items_on_level = 2; i &lt; n; items_on_level *= 2) {
+          System.out.print(" |");
+          for (int j = 0; j &lt; items_on_level &amp;&amp; i &lt; n; j++, i++)
+            System.out.print(" " + a[i]);
+        }
+        System.out.println();
+      }
+    
+      public static void swap(int a[], int i, int j) {
+        int tmp = a[i];
+        a[i] = a[j];
+        a[j] = tmp;
+      }
+    
+      public static void sink(int n, int a[], int i) {
+        while (true) {
+          int l_anc = 2 * i + 1;
+          if (l_anc &gt;= n)
+            break;
+    
+          int max = l_anc;
+          int r_anc = l_anc + 1;
+          if (r_anc &lt; n &amp;&amp; a[l_anc] &lt; a[r_anc])
+            max = r_anc;
+    
+          if (a[i] &gt;= a[max])
+            break;
+    
+          swap(a, i, max);
+          i = max;
+        }
+      }
+    
+      public static void heapify(int n, int a[]) {
+        for (int i = (n - 1) / 2; i &gt;= 0; i--) {
+          sink(n, a, i);
+        }
+      }
+    
+      public static void heapsort(int n, int a[]) {
+        heapify(n, a);
+        dump_heap(n, a);
+    
+        for (int i = n - 1; i &gt; 0; i--) {
+          swap(a, 0, i);
+          sink(i, a, 0);
+          dump_heap(i, a);
+        }
+      }
+    
+      public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        int n = sc.nextInt();
+    
+        int[] a = new int[n];
+        for (int i=0; i &lt; n; i++) {
+          a[i] = sc.nextInt();
+        }
+        heapsort(n, a);
+      }
+    }
+    </textarea><div id="id_q647383:1_sampleanswer_wrapper" class="ui_wrapper" style="resize: vertical; overflow: hidden; min-height: 411px; width: 100%; border: 1px solid darkgrey;"><div class=" ace_editor ace-tm" style="resize: none; height: 395px; width: 505.094px;"><textarea class="ace_text-input" wrap="off" autocorrect="off" autocapitalize="off" spellcheck="false" readonly="" style="opacity: 0; font-size: 1px; height: 1px; width: 1px; top: 18px; left: 54px;" id="ace_id_q647383:1_sampleanswer"></textarea><div class="ace_gutter moodle-has-zindex" aria-hidden="true" style="left: 0px; width: 51px;"><div class="ace_layer ace_gutter-layer ace_folding-enabled" style="height: 1e+06px; top: 0px; left: 0px; width: 51px;"><div class="ace_gutter-cell ace_gutter-active-line " style="height: 18px; top: 0px;">1<span style="display: inline-block; height: 18px;" class="ace_fold-widget ace_start ace_open"></span></div><div class="ace_gutter-cell " style="height: 18px; top: 18px;">2<span style="display: none;"></span></div><div class="ace_gutter-cell " style="height: 18px; top: 36px;">3<span style="display: inline-block; height: 18px;" class="ace_fold-widget ace_start ace_open"></span></div><div class="ace_gutter-cell " style="height: 18px; top: 54px;">4<span style="display: inline-block; height: 18px;" class="ace_fold-widget ace_start ace_open"></span></div><div class="ace_gutter-cell " style="height: 18px; top: 72px;">5<span style="display: none;"></span></div><div class="ace_gutter-cell " style="height: 18px; top: 90px;">6<span style="display: none;"></span></div><div class="ace_gutter-cell " style="height: 18px; top: 108px;">7<span style="display: inline-block; height: 18px;" class="ace_fold-widget ace_start ace_open"></span></div><div class="ace_gutter-cell " style="height: 18px; top: 126px;">8<span style="display: none;"></span></div><div class="ace_gutter-cell " style="height: 18px; top: 144px;">9<span style="display: none;"></span></div><div class="ace_gutter-cell " style="height: 18px; top: 162px;">10<span style="display: none;"></span></div><div class="ace_gutter-cell " style="height: 18px; top: 180px;">11<span style="display: none;"></span></div><div class="ace_gutter-cell " style="height: 18px; top: 198px;">12<span style="display: none;"></span></div><div class="ace_gutter-cell " style="height: 18px; top: 216px;">13<span style="display: none;"></span></div><div class="ace_gutter-cell " style="height: 18px; top: 234px;">14<span style="display: none;"></span></div><div class="ace_gutter-cell " style="height: 18px; top: 252px;">15<span style="display: inline-block; height: 18px;" class="ace_fold-widget ace_start ace_open"></span></div><div class="ace_gutter-cell " style="height: 18px; top: 270px;">16<span style="display: none;"></span></div><div class="ace_gutter-cell " style="height: 18px; top: 288px;">17<span style="display: none;"></span></div><div class="ace_gutter-cell " style="height: 18px; top: 306px;">18<span style="display: none;"></span></div><div class="ace_gutter-cell " style="height: 18px; top: 324px;">19<span style="display: none;"></span></div><div class="ace_gutter-cell " style="height: 18px; top: 342px;">20<span style="display: none;"></span></div><div class="ace_gutter-cell " style="height: 18px; top: 360px;">21<span style="display: inline-block; height: 18px;" class="ace_fold-widget ace_start ace_open"></span></div><div class="ace_gutter-cell " style="height: 18px; top: 378px;">22<span style="display: inline-block; height: 18px;" class="ace_fold-widget ace_start ace_open"></span></div><div class="ace_gutter-cell " style="height: 18px; top: 396px;">23<span style="display: none;"></span></div></div></div><div class="ace_scroller" style="line-height: 18px; left: 50.4141px; right: 17px; bottom: 0px;"><div class="ace_content" style="top: 0px; left: 0px; width: 574px; height: 414px;"><div class="ace_layer ace_print-margin-layer"><div class="ace_print-margin" style="left: 661px; visibility: visible;"></div></div><div class="ace_layer ace_marker-layer"><div class="ace_active-line" style="height: 18px; top: 0px; left: 0px; right: 0px;"></div></div><div class="ace_layer ace_text-layer" style="height: 1e+06px; margin: 0px 4px; top: 0px; left: 0px;"><div class="ace_line" style="height: 18px; top: 0px;"><span class="ace_keyword">import</span> <span class="ace_identifier">java</span>.<span class="ace_identifier">util</span>.<span class="ace_identifier">Scanner</span>;</div><div class="ace_line" style="height: 18px; top: 18px;"></div><div class="ace_line" style="height: 18px; top: 36px;"><span class="ace_keyword">public</span> <span class="ace_keyword">class</span> <span class="ace_identifier">Izziv2</span> {</div><div class="ace_line" style="height: 18px; top: 54px;">  <span class="ace_keyword">public</span> <span class="ace_keyword">static</span> <span class="ace_keyword">void</span> <span class="ace_identifier">dump_heap</span>(<span class="ace_keyword">int</span> <span class="ace_identifier">n</span>, <span class="ace_keyword">int</span> <span class="ace_identifier">a</span>[]) {</div><div class="ace_line" style="height: 18px; top: 72px;">    <span class="ace_support ace_function">System</span>.<span class="ace_identifier">out</span>.<span class="ace_identifier">print</span>(<span class="ace_identifier">a</span>[<span class="ace_constant ace_numeric">0</span>]);</div><div class="ace_line" style="height: 18px; top: 90px;"></div><div class="ace_line" style="height: 18px; top: 108px;">    <span class="ace_keyword">for</span> (<span class="ace_keyword">int</span> <span class="ace_identifier">i</span> <span class="ace_keyword ace_operator">=</span> <span class="ace_constant ace_numeric">1</span>, <span class="ace_identifier">items_on_level</span> <span class="ace_keyword ace_operator">=</span> <span class="ace_constant ace_numeric">2</span>; <span class="ace_identifier">i</span> <span class="ace_keyword ace_operator">&lt;</span> <span class="ace_identifier">n</span>; <span class="ace_identifier">items_on_level</span> <span class="ace_keyword ace_operator">*=</span> <span class="ace_constant ace_numeric">2</span>) {</div><div class="ace_line" style="height: 18px; top: 126px;"><span class="ace_indent-guide">    </span>  <span class="ace_support ace_function">System</span>.<span class="ace_identifier">out</span>.<span class="ace_identifier">print</span>(<span class="ace_string">" |"</span>);</div><div class="ace_line" style="height: 18px; top: 144px;"><span class="ace_indent-guide">    </span>  <span class="ace_keyword">for</span> (<span class="ace_keyword">int</span> <span class="ace_identifier">j</span> <span class="ace_keyword ace_operator">=</span> <span class="ace_constant ace_numeric">0</span>; <span class="ace_identifier">j</span> <span class="ace_keyword ace_operator">&lt;</span> <span class="ace_identifier">items_on_level</span> <span class="ace_keyword ace_operator">&amp;&amp;</span> <span class="ace_identifier">i</span> <span class="ace_keyword ace_operator">&lt;</span> <span class="ace_identifier">n</span>; <span class="ace_identifier">j</span><span class="ace_keyword ace_operator">++</span>, <span class="ace_identifier">i</span><span class="ace_keyword ace_operator">++</span>)</div><div class="ace_line" style="height: 18px; top: 162px;"><span class="ace_indent-guide">    </span>    <span class="ace_support ace_function">System</span>.<span class="ace_identifier">out</span>.<span class="ace_identifier">print</span>(<span class="ace_string">" "</span> <span class="ace_keyword ace_operator">+</span> <span class="ace_identifier">a</span>[<span class="ace_identifier">i</span>]);</div><div class="ace_line" style="height: 18px; top: 180px;">    }</div><div class="ace_line" style="height: 18px; top: 198px;">    <span class="ace_support ace_function">System</span>.<span class="ace_identifier">out</span>.<span class="ace_identifier">println</span>();</div><div class="ace_line" style="height: 18px; top: 216px;">  }</div><div class="ace_line" style="height: 18px; top: 234px;"></div><div class="ace_line" style="height: 18px; top: 252px;">  <span class="ace_keyword">public</span> <span class="ace_keyword">static</span> <span class="ace_keyword">void</span> <span class="ace_identifier">swap</span>(<span class="ace_keyword">int</span> <span class="ace_identifier">a</span>[], <span class="ace_keyword">int</span> <span class="ace_identifier">i</span>, <span class="ace_keyword">int</span> <span class="ace_identifier">j</span>) {</div><div class="ace_line" style="height: 18px; top: 270px;">    <span class="ace_keyword">int</span> <span class="ace_identifier">tmp</span> <span class="ace_keyword ace_operator">=</span> <span class="ace_identifier">a</span>[<span class="ace_identifier">i</span>];</div><div class="ace_line" style="height: 18px; top: 288px;">    <span class="ace_identifier">a</span>[<span class="ace_identifier">i</span>] <span class="ace_keyword ace_operator">=</span> <span class="ace_identifier">a</span>[<span class="ace_identifier">j</span>];</div><div class="ace_line" style="height: 18px; top: 306px;">    <span class="ace_identifier">a</span>[<span class="ace_identifier">j</span>] <span class="ace_keyword ace_operator">=</span> <span class="ace_identifier">tmp</span>;</div><div class="ace_line" style="height: 18px; top: 324px;">  }</div><div class="ace_line" style="height: 18px; top: 342px;"></div><div class="ace_line" style="height: 18px; top: 360px;">  <span class="ace_keyword">public</span> <span class="ace_keyword">static</span> <span class="ace_keyword">void</span> <span class="ace_identifier">sink</span>(<span class="ace_keyword">int</span> <span class="ace_identifier">n</span>, <span class="ace_keyword">int</span> <span class="ace_identifier">a</span>[], <span class="ace_keyword">int</span> <span class="ace_identifier">i</span>) {</div><div class="ace_line" style="height: 18px; top: 378px;">    <span class="ace_keyword">while</span> (<span class="ace_constant ace_language ace_boolean">true</span>) {</div></div><div class="ace_layer ace_marker-layer"></div><div class="ace_layer ace_cursor-layer ace_hidden-cursors"><div class="ace_cursor" style="display: block; top: 0px; left: 4px; width: 8px; height: 18px;"></div></div></div></div><div class="ace_scrollbar ace_scrollbar-v" style="width: 22px; bottom: 17px;"><div class="ace_scrollbar-inner" style="width: 22px; height: 1224px;">&nbsp;</div></div><div class="ace_scrollbar ace_scrollbar-h" style="height: 22px; left: 50.4141px; right: 17px;"><div class="ace_scrollbar-inner" style="height: 22px; width: 574px;">&nbsp;</div></div><div style="height: auto; width: auto; top: 0px; left: 0px; visibility: hidden; position: absolute; white-space: pre; font: inherit; overflow: hidden;"><div style="height: auto; width: auto; top: 0px; left: 0px; visibility: hidden; position: absolute; white-space: pre; font: inherit; overflow: visible;">הההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההה</div><div style="height: auto; width: auto; top: 0px; left: 0px; visibility: hidden; position: absolute; white-space: pre; font-style: inherit; font-variant: inherit; font-stretch: inherit; font-size: inherit; line-height: inherit; font-family: inherit; font-optical-sizing: inherit; font-kerning: inherit; font-feature-settings: inherit; font-variation-settings: inherit; overflow: visible;">XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX</div></div></div></div></div></div></div><div class="im-feedback"><div class="correctness badge correct">Pravilno</div><div class="gradingdetails">Točke za ta prispevek: 1,00/1,00.</div></div></div></div></div>
