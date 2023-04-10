@@ -1,0 +1,2495 @@
+<div id="question-654788-1" class="que coderunner adaptive_adapted_for_coderunner correct"><div class="info"><h3 class="no">Vprašanje <span class="qno">1</span></h3><div class="state">Pravilno</div><div class="grade">Točk 1,00 od 1,00</div><div class="questionflag editable" id="yui_3_17_2_1_1681169409576_25"><input type="hidden" name="q654788:1_:flagged" value="0"><input type="hidden" value="qaid=4306828&amp;qubaid=654788&amp;qid=178042&amp;slot=1&amp;checksum=af5e3aa636d509d04a206378fc40e24a&amp;sesskey=6a9SU1wHuG&amp;newstate=" class="questionflagpostdata">
+    <input type="hidden" class="questionflagvalue" id="q654788:1_:flaggedcheckbox" name="q654788:1_:flagged" value="0"><a tabindex="0" class="aabtn" role="button" aria-pressed="false" aria-label="Označeno z zastavico" title="To vprašanje označite z zastavico za prihodnje potrebe"><img class="questionflagimage" src="https://ucilnica.fri.uni-lj.si/theme/image.php/boost/core/1670156578/i/unflagged" alt="">Vprašanje z zastavico</a></div></div><div class="content"><div class="formulation clearfix"><h4 class="accesshide">Besedilo vprašanja</h4><input type="hidden" name="q654788:1_:sequencecheck" value="5"><p>Napišite program za množenje matrik s Strassenovim algoritmom.</p><p>Da olajšamo implementacijo, naj vedno velja sledeče:</p><p></p><ul><li>&nbsp;vse vhodne matrike so kvadratne (dimenzij n krat n)<br></li><li>njihova dimenzija je potenca števila 2.</li></ul><p></p><h4>Oris Strassenovega algoritma</h4><p>Vhodni matriki <b>a</b> in <b>b</b>, izhodna matrika <b>c</b>. Vsako matriko razdelimo na 4 podmatrike (npr. <b>a</b> razdelimo na <b>a11</b>, <b>a12,</b> <b>a21</b>, <b>a22</b>).&nbsp;</p><p>Izračunamo sedem podproduktov:</p><pre><span style="white-space:pre">	</span>m1 = (a11+a22)(b11+b22)<br><span style="white-space:pre">	</span>m2 = (a21+a22)b11<br><span style="white-space:pre">	</span>m3 = a11(b12-b22)<br><span style="white-space:pre">	</span>m4 = a22(b21-b11)<br><span style="white-space:pre">	</span>m5 =(a11+a12)b22<br><span style="white-space:pre">	</span>m6 = (a21-a11)(b11+b12)<br><span style="white-space:pre">	</span>m7 = (a12-a22)(b21+b22)</pre><p><span style="font-size: 0.9375rem;">Podmatrike končne matrike <b>c</b> izračunamo na sledeči način:</span></p><pre><span style="white-space:pre">	</span>c11 =&nbsp; m1+m4-m5+m7<br><span style="white-space:pre">	</span>c12 = m3+m5<br><span style="white-space:pre">	</span>c21 = m2+m4<br><span style="white-space:pre">	</span>c22 = m1-m2+m3+m6</pre><p><br></p><h4>Vhod in izhod</h4><p>Program naj na standardnem vhodu najprej prebere dimenzijo matrik n in mejno vrednost, pri kateri naj se rekurzija pri Strassenovem algoritmu ustavi (pri tej velikosti matrik naj se izvede klasično množenje matrik). Potem pa sledita dve matriki celih števil, vsaka dimenzij n krat n.</p><p>Na izhod, za vsako matriko m_i, izpišite vsoto vseh elementov v tej matriki. Te vsote izpišete takrat, ko imate na voljo vseh sedem produktnih matrik m_i.</p><p>Za konec pa izpišite še celoten končni rezultat.</p><p class="for-example-para">For example:</p><div class="coderunner-examples"><table class="coderunnerexamples">
+    <thead>
+    <tr>
+    <th class="header c0" style="" scope="col">Input</th>
+    <th class="header c1 lastcol" style="" scope="col">Result</th>
+    </tr>
+    </thead>
+    <tbody><tr class="r0 lastrow">
+    <td class="cell c0" style=""><pre class="tablecell">2 1
+    3 8
+    9 6
+    8 6
+    5 5</pre></td>
+    <td class="cell c1 lastcol" style=""><pre class="tablecell">m1: 117
+    m2: 120
+    m3: 3
+    m4: -18
+    m5: 55
+    m6: 84
+    m7: 20
+    64 58
+    102 84
+    </pre></td>
+    </tr>
+    </tbody>
+    </table>
+    </div><div class="prompt"><label class="answerprompt" for="id_q654788:1_answer">Answer:</label><span class="penaltyregime">(penalty regime: 0 %)</span></div><input type="button" id="q654788:1_-resetbutton" name="q654788:1_-resetbutton" value="Reset answer" class="answer_reset_btn btn btn-secondary" data-reload-text="import java.util.Scanner;
+    
+    
+    class Matrix {
+    
+    
+        private int[][] m;
+    
+        public int n; //only square matrices
+    
+        public Matrix(int n){
+    
+            this.n = n;
+    
+            m = new int[n][n];
+    
+        }
+    
+    
+        //set value at i,j
+        public void setV(int i, int j, int val){
+    
+            m[i][j] = val;
+    
+        }
+    
+    
+        // get value at index i,j
+        public int v(int i, int j){
+    
+            return m[i][j];
+    
+        }
+    
+    
+        // return a square submatrix from this
+        public Matrix getSubmatrix(int startRow, int startCol, int dim){
+    
+            Matrix subM = new Matrix(dim);
+    
+            for (int i = 0; i<dim ; i++ )
+    
+                for (int j=0;j<dim ; j++ )
+    
+                    subM.setV(i,j, m[startRow+i][startCol+j]);
+    
+    
+    
+            return subM;
+    
+        }
+    
+    
+        // write this matrix as a submatrix from b (useful for the result of multiplication)
+        public void putSubmatrix(int startRow, int startCol, Matrix b){
+    
+            for (int i = 0; i<b.n ; i++ )
+    
+                for (int j=0;j<b.n ; j++ )
+    
+                    setV(startRow+i,startCol+j, b.v(i,j));
+    
+        }
+    
+    
+        // matrix addition
+        public Matrix sum(Matrix b){
+    
+            Matrix c = new Matrix(n);
+    
+            for(int i = 0; i< n;i++){
+    
+                for(int j = 0; j<n;j++){
+    
+                    c.setV(i, j, m[i][j]+b.v(i, j));
+    
+                }
+    
+            }
+    
+            return c;
+    
+        }
+    
+    
+    
+    
+    
+        // matrix subtraction
+        public Matrix sub(Matrix b){
+    
+            Matrix c = new Matrix(n);
+    
+            for(int i = 0; i< n;i++){
+    
+                for(int j = 0; j<n;j++){
+    
+                    c.setV(i, j, m[i][j]-b.v(i, j));
+    
+                }
+    
+            }
+    
+            return c;
+    
+        }
+    
+    
+    
+        //simple multiplication
+        public Matrix mult(Matrix b){
+            //TODO
+        
+        }
+    
+    
+        // Strassen multiplication
+        public Matrix multStrassen(Matrix b, int cutoff){
+            //TODO
+        }
+    
+    
+    }
+    
+    
+    
+    
+    public class Izziv6{
+    
+    
+    
+        public static void main(String[] args) {
+    
+            
+    
+    
+        }
+    
+    
+    
+    }
+    "><textarea class="coderunner-answer edit_code" name="q654788:1_answer" id="id_q654788:1_answer" spellcheck="false" rows="18" data-params="{}" data-globalextra="" data-lang="Java" data-test0="" readonly="" style="display: none;">import java.util.Scanner;
+    
+    
+    class Matrix {
+    
+    
+        private int[][] m;
+    
+        public int n; //only square matrices
+    
+        public Matrix(int n){
+    
+            this.n = n;
+    
+            m = new int[n][n];
+    
+        }
+    
+    
+        //set value at i,j
+        public void setV(int i, int j, int val){
+    
+            m[i][j] = val;
+    
+        }
+    
+    
+        // get value at index i,j
+        public int v(int i, int j){
+    
+            return m[i][j];
+    
+        }
+    
+    
+        // return a square submatrix from this
+        public Matrix getSubmatrix(int startRow, int startCol, int dim){
+    
+            Matrix subM = new Matrix(dim);
+    
+            for (int i = 0; i&lt;dim ; i++ )
+    
+                for (int j=0;j&lt;dim ; j++ )
+    
+                    subM.setV(i,j, m[startRow+i][startCol+j]);
+    
+    
+    
+            return subM;
+    
+        }
+    
+    
+        // write this matrix as a submatrix from b (useful for the result of multiplication)
+        public void putSubmatrix(int startRow, int startCol, Matrix b){
+    
+            for (int i = 0; i&lt;b.n ; i++ )
+    
+                for (int j=0;j&lt;b.n ; j++ )
+    
+                    setV(startRow+i,startCol+j, b.v(i,j));
+    
+        }
+    
+    
+        // matrix addition
+        public Matrix sum(Matrix b){
+    
+            Matrix c = new Matrix(n);
+    
+            for(int i = 0; i&lt; n;i++){
+    
+                for(int j = 0; j&lt;n;j++){
+    
+                    c.setV(i, j, m[i][j]+b.v(i, j));
+    
+                }
+    
+            }
+    
+            return c;
+    
+        }
+    
+    
+    
+    
+    
+        // matrix subtraction
+        public Matrix sub(Matrix b){
+    
+            Matrix c = new Matrix(n);
+    
+            for(int i = 0; i&lt; n;i++){
+    
+                for(int j = 0; j&lt;n;j++){
+    
+                    c.setV(i, j, m[i][j]-b.v(i, j));
+    
+                }
+    
+            }
+    
+            return c;
+    
+        }
+    
+    
+    
+        //simple multiplication
+        public Matrix mult(Matrix b){
+            Matrix rez = new Matrix(b.n);
+            for(int i=0; i&lt;rez.n; i++){
+                for(int j=0; j&lt;rez.n; j++){
+                    int tmp = 0;
+                    for(int k=0; k&lt;n; k++){
+                        tmp += m[i][k]*b.v(k, j);
+                    }
+                    rez.setV(i, j, tmp);
+                }
+            }
+            return rez;
+        }
+    
+    
+        // Strassen multiplication
+        public Matrix multStrassen(Matrix b, int cutoff){
+            if(n == cutoff) {
+                return this.mult(b);
+            }
+            else{
+                Matrix c = new Matrix(n);
+                Matrix a11 = this.getSubmatrix(0, 0, n/2);
+                Matrix a12 = this.getSubmatrix(0, n/2, n/2);
+                Matrix a21 = this.getSubmatrix(n/2, 0, n/2);
+                Matrix a22 = this.getSubmatrix(n/2, n/2, n/2);
+                Matrix b11 = b.getSubmatrix(0, 0, b.n/2);
+                Matrix b12 = b.getSubmatrix(0, b.n/2, b.n/2);
+                Matrix b21 = b.getSubmatrix(b.n/2, 0, b.n/2);
+                Matrix b22 = b.getSubmatrix(b.n/2, b.n/2, b.n/2);
+                Matrix m1 = (a11.sum(a22)).multStrassen(b11.sum(b22), cutoff);
+                Matrix m2 = (a21.sum(a22)).multStrassen(b11, cutoff);
+                Matrix m3 = a11.multStrassen(b12.sub(b22), cutoff);
+                Matrix m4 = a22.multStrassen(b21.sub(b11), cutoff);
+                Matrix m5 = (a11.sum(a12)).multStrassen(b22, cutoff);
+                Matrix m6 = (a21.sub(a11)).multStrassen(b11.sum(b12), cutoff);
+                Matrix m7 = (a12.sub(a22)).multStrassen(b21.sum(b22), cutoff);
+                Matrix c11 = m1.sum(m4).sub(m5).sum(m7);
+                Matrix c12 = m3.sum(m5);
+                Matrix c21 = m2.sum(m4);
+                Matrix c22 = m1.sub(m2).sum(m3).sum(m6);
+                c.putSubmatrix(0, 0, c11);
+                c.putSubmatrix(0, c.n/2, c12);
+                c.putSubmatrix(c.n/2, 0, c21);
+                c.putSubmatrix(c.n/2, c.n/2, c22);
+                //print m_1-7
+                System.out.printf("m1: %d\n",m1.sumEl());
+                System.out.printf("m2: %d\n",m2.sumEl());
+                System.out.printf("m3: %d\n",m3.sumEl());
+                System.out.printf("m4: %d\n",m4.sumEl());
+                System.out.printf("m5: %d\n",m5.sumEl());
+                System.out.printf("m6: %d\n",m6.sumEl());
+                System.out.printf("m7: %d\n",m7.sumEl());
+                return c;
+            }
+        }
+    
+        //print matrix to stdout
+        public void print(){
+            for(int i=0; i&lt;this.n; i++){
+                for(int j=0; j&lt;this.n; j++){
+                    System.out.printf("%d%s",this.v(i, j), j==n-1 ? "" : " ");
+                }
+                System.out.println();
+            }
+        }
+    
+        //sum of all elements
+        public int sumEl(){
+            int res = 0;
+            for(int i=0; i&lt;this.n; i++){
+                for(int j=0; j&lt;this.n; j++){
+                    res += this.v(i, j);
+                }
+            }
+            return res;
+        }
+    
+    
+    }
+    
+    
+    
+    
+    public class Izziv6{
+    
+        public static void branjeMatrike(Matrix m, Scanner vhod){
+            for(int i=0; i&lt;m.n; i++){
+                for(int j=0; j&lt;m.n; j++){
+                    m.setV(i, j, vhod.nextInt());
+                }
+            }
+        }
+    
+        public static void main(String[] args) {
+    
+            //branje vhodnih podatkov
+            Scanner joze = new Scanner(System.in);
+            int n = joze.nextInt();
+            int meja = joze.nextInt();
+            Matrix a = new Matrix(n);
+            Matrix b = new Matrix(n);
+            branjeMatrike(a,joze);
+            branjeMatrike(b,joze);
+            joze.close();
+            
+            //magic
+            /* Matrix rez_test1_debug = a.mult(b); */
+            Matrix rezultat = a.multStrassen(b, meja);
+            rezultat.print();
+        }
+    
+    
+    
+    }
+    </textarea><div id="id_q654788:1_answer_wrapper" class="ui_wrapper" style="resize: vertical; overflow: hidden; min-height: 411px; width: 100%; border: 1px solid darkgrey;"><div class=" ace_editor ace-tm" style="resize: none; height: 395px; width: 505.094px;"><textarea class="ace_text-input" wrap="off" autocorrect="off" autocapitalize="off" spellcheck="false" readonly="" style="opacity: 0; font-size: 1px; height: 1px; width: 1px; top: 18px; left: 54px;" id="ace_id_q654788:1_answer"></textarea><div class="ace_gutter moodle-has-zindex" aria-hidden="true" style="left: 0px; width: 51px;"><div class="ace_layer ace_gutter-layer ace_folding-enabled" style="height: 1e+06px; top: 0px; left: 0px; width: 51px;"><div class="ace_gutter-cell ace_gutter-active-line " style="height: 18px; top: 0px;">1<span style="display: inline-block; height: 18px;" class="ace_fold-widget ace_start ace_open"></span></div><div class="ace_gutter-cell " style="height: 18px; top: 18px;">2<span style="display: none;"></span></div><div class="ace_gutter-cell " style="height: 18px; top: 36px;">3<span style="display: none;"></span></div><div class="ace_gutter-cell " style="height: 18px; top: 54px;">4<span style="display: inline-block; height: 18px;" class="ace_fold-widget ace_start ace_open"></span></div><div class="ace_gutter-cell " style="height: 18px; top: 72px;">5<span style="display: none;"></span></div><div class="ace_gutter-cell " style="height: 18px; top: 90px;">6<span style="display: none;"></span></div><div class="ace_gutter-cell " style="height: 18px; top: 108px;">7<span style="display: none;"></span></div><div class="ace_gutter-cell " style="height: 18px; top: 126px;">8<span style="display: none;"></span></div><div class="ace_gutter-cell " style="height: 18px; top: 144px;">9<span style="display: none;"></span></div><div class="ace_gutter-cell " style="height: 18px; top: 162px;">10<span style="display: none;"></span></div><div class="ace_gutter-cell " style="height: 18px; top: 180px;">11<span style="display: inline-block; height: 18px;" class="ace_fold-widget ace_start ace_open"></span></div><div class="ace_gutter-cell " style="height: 18px; top: 198px;">12<span style="display: none;"></span></div><div class="ace_gutter-cell " style="height: 18px; top: 216px;">13<span style="display: none;"></span></div><div class="ace_gutter-cell " style="height: 18px; top: 234px;">14<span style="display: none;"></span></div><div class="ace_gutter-cell " style="height: 18px; top: 252px;">15<span style="display: none;"></span></div><div class="ace_gutter-cell " style="height: 18px; top: 270px;">16<span style="display: none;"></span></div><div class="ace_gutter-cell " style="height: 18px; top: 288px;">17<span style="display: none;"></span></div><div class="ace_gutter-cell " style="height: 18px; top: 306px;">18<span style="display: none;"></span></div><div class="ace_gutter-cell " style="height: 18px; top: 324px;">19<span style="display: none;"></span></div><div class="ace_gutter-cell " style="height: 18px; top: 342px;">20<span style="display: none;"></span></div><div class="ace_gutter-cell " style="height: 18px; top: 360px;">21<span style="display: inline-block; height: 18px;" class="ace_fold-widget ace_start ace_open"></span></div><div class="ace_gutter-cell " style="height: 18px; top: 378px;">22<span style="display: none;"></span></div><div class="ace_gutter-cell " style="height: 18px; top: 396px;">23<span style="display: none;"></span></div></div></div><div class="ace_scroller" style="line-height: 18px; left: 50.4141px; right: 17px; bottom: 0px;"><div class="ace_content" style="top: 0px; left: 0px; width: 730px; height: 414px;"><div class="ace_layer ace_print-margin-layer"><div class="ace_print-margin" style="left: 661px; visibility: visible;"></div></div><div class="ace_layer ace_marker-layer"><div class="ace_active-line" style="height: 18px; top: 0px; left: 0px; right: 0px;"></div></div><div class="ace_layer ace_text-layer" style="height: 1e+06px; margin: 0px 4px; top: 0px; left: 0px;"><div class="ace_line" style="height: 18px; top: 0px;"><span class="ace_keyword">import</span> <span class="ace_identifier">java</span>.<span class="ace_identifier">util</span>.<span class="ace_identifier">Scanner</span>;</div><div class="ace_line" style="height: 18px; top: 18px;"></div><div class="ace_line" style="height: 18px; top: 36px;"></div><div class="ace_line" style="height: 18px; top: 54px;"><span class="ace_keyword">class</span> <span class="ace_identifier">Matrix</span> {</div><div class="ace_line" style="height: 18px; top: 72px;"></div><div class="ace_line" style="height: 18px; top: 90px;"></div><div class="ace_line" style="height: 18px; top: 108px;">    <span class="ace_keyword">private</span> <span class="ace_keyword">int</span>[][] <span class="ace_identifier">m</span>;</div><div class="ace_line" style="height: 18px; top: 126px;"></div><div class="ace_line" style="height: 18px; top: 144px;">    <span class="ace_keyword">public</span> <span class="ace_keyword">int</span> <span class="ace_identifier">n</span>; <span class="ace_comment">//only square matrices</span></div><div class="ace_line" style="height: 18px; top: 162px;"></div><div class="ace_line" style="height: 18px; top: 180px;">    <span class="ace_keyword">public</span> <span class="ace_identifier">Matrix</span>(<span class="ace_keyword">int</span> <span class="ace_identifier">n</span>){</div><div class="ace_line" style="height: 18px; top: 198px;"></div><div class="ace_line" style="height: 18px; top: 216px;"><span class="ace_indent-guide">    </span>    <span class="ace_keyword">this</span>.<span class="ace_identifier">n</span> <span class="ace_keyword ace_operator">=</span> <span class="ace_identifier">n</span>;</div><div class="ace_line" style="height: 18px; top: 234px;"></div><div class="ace_line" style="height: 18px; top: 252px;"><span class="ace_indent-guide">    </span>    <span class="ace_identifier">m</span> <span class="ace_keyword ace_operator">=</span> <span class="ace_keyword">new</span> <span class="ace_keyword">int</span>[<span class="ace_identifier">n</span>][<span class="ace_identifier">n</span>];</div><div class="ace_line" style="height: 18px; top: 270px;"></div><div class="ace_line" style="height: 18px; top: 288px;">    }</div><div class="ace_line" style="height: 18px; top: 306px;"></div><div class="ace_line" style="height: 18px; top: 324px;"></div><div class="ace_line" style="height: 18px; top: 342px;">    <span class="ace_comment">//set value at i,j</span></div><div class="ace_line" style="height: 18px; top: 360px;">    <span class="ace_keyword">public</span> <span class="ace_keyword">void</span> <span class="ace_identifier">setV</span>(<span class="ace_keyword">int</span> <span class="ace_identifier">i</span>, <span class="ace_keyword">int</span> <span class="ace_identifier">j</span>, <span class="ace_keyword">int</span> <span class="ace_identifier">val</span>){</div><div class="ace_line" style="height: 18px; top: 378px;"></div></div><div class="ace_layer ace_marker-layer"></div><div class="ace_layer ace_cursor-layer ace_hidden-cursors"><div class="ace_cursor" style="display: block; top: 0px; left: 4px; width: 8px; height: 18px;"></div></div></div></div><div class="ace_scrollbar ace_scrollbar-v" style="width: 22px; bottom: 17px;"><div class="ace_scrollbar-inner" style="width: 22px; height: 4068px;">&nbsp;</div></div><div class="ace_scrollbar ace_scrollbar-h" style="height: 22px; left: 50.4141px; right: 17px;"><div class="ace_scrollbar-inner" style="height: 22px; width: 730px;">&nbsp;</div></div><div style="height: auto; width: auto; top: 0px; left: 0px; visibility: hidden; position: absolute; white-space: pre; font: inherit; overflow: hidden;"><div style="height: auto; width: auto; top: 0px; left: 0px; visibility: hidden; position: absolute; white-space: pre; font: inherit; overflow: visible;">הההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההה</div><div style="height: auto; width: auto; top: 0px; left: 0px; visibility: hidden; position: absolute; white-space: pre; font-style: inherit; font-variant: inherit; font-stretch: inherit; font-size: inherit; line-height: inherit; font-family: inherit; font-optical-sizing: inherit; font-kerning: inherit; font-feature-settings: inherit; font-variation-settings: inherit; overflow: visible;">XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX</div></div></div></div><div class="im-controls"><div class="d-flex"></div></div></div><div class="outcome clearfix"><h4 class="accesshide">Pripombe</h4><div class="feedback"><div class="specificfeedback"><div class="coderunner-test-results good"><table class="coderunner-test-results">
+    <thead>
+    <tr>
+    <td class="header c0" style=""></td>
+    <th class="header c1" style="" scope="col">Input</th>
+    <th class="header c2" style="" scope="col">Expected</th>
+    <th class="header c3" style="" scope="col">Got</th>
+    <td class="header c4 lastcol" style=""></td>
+    </tr>
+    </thead>
+    <tbody><tr class="r1">
+    <td class="cell c0" style=""><i class="icon fa fa-check text-success fa-fw " title="Pravilno" role="img" aria-label="Pravilno"></i></td>
+    <td class="cell c1" style=""><pre class="tablecell">2 1
+    3 8
+    9 6
+    8 6
+    5 5</pre></td>
+    <td class="cell c2" style=""><pre class="tablecell">m1: 117
+    m2: 120
+    m3: 3
+    m4: -18
+    m5: 55
+    m6: 84
+    m7: 20
+    64 58
+    102 84</pre></td>
+    <td class="cell c3" style=""><pre class="tablecell">m1: 117
+    m2: 120
+    m3: 3
+    m4: -18
+    m5: 55
+    m6: 84
+    m7: 20
+    64 58
+    102 84</pre></td>
+    <td class="cell c4 lastcol" style=""><i class="icon fa fa-check text-success fa-fw " title="Pravilno" role="img" aria-label="Pravilno"></i></td>
+    </tr>
+    <tr class="r0">
+    <td class="cell c0" style=""><i class="icon fa fa-check text-success fa-fw " title="Pravilno" role="img" aria-label="Pravilno"></i></td>
+    <td class="cell c1" style=""><pre class="tablecell">8 2
+    6 3 5 1 7 3 6 0
+    9 0 8 6 3 4 9 6
+    9 7 3 1 6 6 0 6
+    2 9 8 8 3 3 8 6
+    1 8 3 3 4 2 3 6
+    4 2 8 5 2 3 1 6
+    1 1 3 9 0 2 5 1
+    8 3 5 5 7 1 0 2
+    3 7 2 6 9 4 0 2
+    1 9 2 7 5 5 6 2
+    5 4 4 3 2 7 4 6
+    8 7 9 1 3 2 5 5
+    4 6 8 4 9 5 1 5
+    7 6 1 8 5 8 6 2
+    6 4 1 9 9 3 6 9
+    3 1 4 0 7 6 5 9</pre></td>
+    <td class="cell c2" style=""><pre class="tablecell">m1: 2642
+    m2: 1529
+    m3: -224
+    m4: 12
+    m5: 1484
+    m6: 326
+    m7: 407
+    m1: 1048
+    m2: 530
+    m3: -4
+    m4: 72
+    m5: 532
+    m6: -62
+    m7: 107
+    m1: -240
+    m2: -97
+    m3: 27
+    m4: -67
+    m5: -180
+    m6: -19
+    m7: 8
+    m1: 9
+    m2: 18
+    m3: 36
+    m4: -37
+    m5: -72
+    m6: -2
+    m7: -157
+    m1: 2113
+    m2: 1144
+    m3: -285
+    m4: -38
+    m5: 1117
+    m6: 215
+    m7: 27
+    m1: -40
+    m2: -255
+    m3: 49
+    m4: 15
+    m5: -44
+    m6: -439
+    m7: -125
+    m1: 827
+    m2: 510
+    m3: -30
+    m4: -87
+    m5: 303
+    m6: 88
+    m7: -149
+    m1: 5593
+    m2: 2277
+    m3: -571
+    m4: -143
+    m5: 3822
+    m6: -516
+    m7: 1359
+    139 180 112 179 214 153 104 148
+    227 221 165 209 285 214 173 254
+    141 223 131 185 251 208 131 151
+    218 257 185 215 259 224 225 257
+    116 166 118 133 179 152 139 156
+    147 153 133 108 161 165 125 164
+    138 124 108 92 109 85 110 125
+    133 188 152 125 194 147 86 132</pre></td>
+    <td class="cell c3" style=""><pre class="tablecell">m1: 2642
+    m2: 1529
+    m3: -224
+    m4: 12
+    m5: 1484
+    m6: 326
+    m7: 407
+    m1: 1048
+    m2: 530
+    m3: -4
+    m4: 72
+    m5: 532
+    m6: -62
+    m7: 107
+    m1: -240
+    m2: -97
+    m3: 27
+    m4: -67
+    m5: -180
+    m6: -19
+    m7: 8
+    m1: 9
+    m2: 18
+    m3: 36
+    m4: -37
+    m5: -72
+    m6: -2
+    m7: -157
+    m1: 2113
+    m2: 1144
+    m3: -285
+    m4: -38
+    m5: 1117
+    m6: 215
+    m7: 27
+    m1: -40
+    m2: -255
+    m3: 49
+    m4: 15
+    m5: -44
+    m6: -439
+    m7: -125
+    m1: 827
+    m2: 510
+    m3: -30
+    m4: -87
+    m5: 303
+    m6: 88
+    m7: -149
+    m1: 5593
+    m2: 2277
+    m3: -571
+    m4: -143
+    m5: 3822
+    m6: -516
+    m7: 1359
+    139 180 112 179 214 153 104 148
+    227 221 165 209 285 214 173 254
+    141 223 131 185 251 208 131 151
+    218 257 185 215 259 224 225 257
+    116 166 118 133 179 152 139 156
+    147 153 133 108 161 165 125 164
+    138 124 108 92 109 85 110 125
+    133 188 152 125 194 147 86 132</pre></td>
+    <td class="cell c4 lastcol" style=""><i class="icon fa fa-check text-success fa-fw " title="Pravilno" role="img" aria-label="Pravilno"></i></td>
+    </tr>
+    <tr class="r1">
+    <td class="cell c0" style=""><i class="icon fa fa-check text-success fa-fw " title="Pravilno" role="img" aria-label="Pravilno"></i></td>
+    <td class="cell c1" style=""><pre class="tablecell">16 8
+    0 2 3 9 2 5 9 8 9 0 7 8 6 4 5 4
+    8 0 0 0 2 6 3 0 6 5 0 1 8 1 1 8
+    9 0 1 0 6 3 8 9 4 4 0 5 4 6 7 1
+    8 9 8 8 7 6 3 7 9 5 8 4 4 4 7 4
+    0 9 2 1 8 9 4 5 7 6 7 7 2 4 7 0
+    6 0 1 6 0 0 3 2 3 1 1 2 1 9 5 2
+    8 3 9 8 9 8 1 6 7 5 4 1 8 5 2 5
+    1 1 1 1 8 5 0 6 7 7 3 5 8 1 6 8
+    5 0 2 0 9 7 4 8 2 3 9 0 6 8 0 5
+    5 6 0 9 1 7 6 7 0 9 3 1 6 9 7 2
+    9 7 1 7 5 6 4 7 1 3 5 2 5 7 6 8
+    3 1 0 6 1 5 1 1 3 7 4 6 6 3 9 5
+    6 8 9 7 8 7 0 5 8 9 0 0 8 5 3 6
+    4 5 0 1 3 4 1 0 3 6 1 8 6 7 3 8
+    5 3 7 3 6 0 2 4 2 9 2 7 8 2 8 0
+    2 5 8 8 9 9 9 5 4 3 4 9 5 5 2 3
+    1 0 0 1 7 6 4 2 6 5 0 4 8 5 8 6
+    2 1 0 5 2 4 5 0 7 3 3 1 1 9 0 0
+    8 3 0 6 8 7 5 6 1 7 7 8 5 7 1 1
+    2 8 3 5 9 9 8 9 8 9 6 0 2 7 7 8
+    8 7 1 3 3 7 3 3 7 0 3 5 4 6 3 7
+    5 2 3 8 0 7 1 2 6 8 8 5 7 3 3 7
+    8 3 1 4 0 9 8 4 4 2 0 5 4 0 3 9
+    3 1 0 0 3 7 4 4 9 1 9 6 0 9 1 3
+    2 8 8 7 2 4 3 8 8 6 4 8 1 0 6 0
+    9 9 4 7 5 8 2 8 2 0 0 4 1 0 8 8
+    8 2 6 1 6 7 3 7 3 5 7 9 9 3 9 9
+    5 4 1 6 3 3 6 7 5 7 4 2 4 9 7 2
+    6 0 0 7 8 8 8 2 7 9 3 1 1 3 4 6
+    6 0 9 0 6 9 0 3 0 4 4 0 1 1 5 8
+    8 5 8 9 4 6 0 3 9 4 3 7 4 0 4 8
+    1 7 3 6 8 4 0 6 7 1 4 9 8 8 8 5</pre></td>
+    <td class="cell c2" style=""><pre class="tablecell">m1: 39587
+    m2: 18986
+    m3: 352
+    m4: 2561
+    m5: 21046
+    m6: 979
+    m7: -427
+    401 313 263 384 347 535 356 423 489 413 381 382 280 348 391 436
+    210 193 133 270 240 309 166 211 294 225 145 244 218 168 285 277
+    357 214 189 272 263 454 244 268 391 249 227 303 228 249 306 392
+    492 386 300 467 471 649 377 470 588 462 436 488 381 464 473 511
+    443 301 263 391 257 489 260 338 445 323 336 368 270 316 335 405
+    191 144 184 159 231 298 143 201 220 203 150 154 144 146 236 267
+    435 340 235 410 459 605 336 411 503 430 395 414 337 408 419 474
+    356 315 214 370 308 420 213 328 432 270 281 357 241 288 346 361
+    376 199 203 232 311 483 215 280 351 259 310 344 291 279 331 434
+    405 264 253 352 364 569 289 332 431 341 302 276 240 293 371 508
+    375 271 235 346 407 554 289 336 494 349 336 356 333 394 406 492
+    323 269 231 348 308 397 204 309 361 302 232 268 235 223 355 381
+    427 368 237 453 447 589 322 399 507 399 363 392 286 405 393 435
+    286 228 192 308 288 363 190 263 320 259 200 233 222 266 329 319
+    409 269 170 352 344 451 280 318 371 301 236 291 215 289 321 365
+    487 340 216 428 378 606 389 421 486 431 396 386 333 430 390 485</pre></td>
+    <td class="cell c3" style=""><pre class="tablecell">m1: 39587
+    m2: 18986
+    m3: 352
+    m4: 2561
+    m5: 21046
+    m6: 979
+    m7: -427
+    401 313 263 384 347 535 356 423 489 413 381 382 280 348 391 436
+    210 193 133 270 240 309 166 211 294 225 145 244 218 168 285 277
+    357 214 189 272 263 454 244 268 391 249 227 303 228 249 306 392
+    492 386 300 467 471 649 377 470 588 462 436 488 381 464 473 511
+    443 301 263 391 257 489 260 338 445 323 336 368 270 316 335 405
+    191 144 184 159 231 298 143 201 220 203 150 154 144 146 236 267
+    435 340 235 410 459 605 336 411 503 430 395 414 337 408 419 474
+    356 315 214 370 308 420 213 328 432 270 281 357 241 288 346 361
+    376 199 203 232 311 483 215 280 351 259 310 344 291 279 331 434
+    405 264 253 352 364 569 289 332 431 341 302 276 240 293 371 508
+    375 271 235 346 407 554 289 336 494 349 336 356 333 394 406 492
+    323 269 231 348 308 397 204 309 361 302 232 268 235 223 355 381
+    427 368 237 453 447 589 322 399 507 399 363 392 286 405 393 435
+    286 228 192 308 288 363 190 263 320 259 200 233 222 266 329 319
+    409 269 170 352 344 451 280 318 371 301 236 291 215 289 321 365
+    487 340 216 428 378 606 389 421 486 431 396 386 333 430 390 485</pre></td>
+    <td class="cell c4 lastcol" style=""><i class="icon fa fa-check text-success fa-fw " title="Pravilno" role="img" aria-label="Pravilno"></i></td>
+    </tr>
+    <tr class="r0">
+    <td class="cell c0" style=""><i class="icon fa fa-check text-success fa-fw " title="Pravilno" role="img" aria-label="Pravilno"></i></td>
+    <td class="cell c1" style=""><pre class="tablecell">16 4
+    4 1 3 5 5 8 7 7 2 0 2 8 8 3 9 8
+    2 3 4 6 3 7 7 9 3 7 2 8 8 7 7 1
+    2 4 1 4 1 9 7 2 3 2 0 4 8 1 8 1
+    5 6 2 6 2 5 5 1 1 0 7 1 1 7 0 1
+    5 9 0 8 0 4 4 4 8 4 0 8 4 2 7 6
+    6 4 8 5 6 5 8 8 0 4 3 5 3 3 0 9
+    7 5 0 9 1 1 4 9 3 3 8 7 2 1 4 4
+    7 3 2 7 0 6 3 6 5 3 5 1 2 1 8 5
+    1 1 8 8 0 4 4 6 5 3 9 7 8 3 9 6
+    9 9 4 0 3 3 4 3 8 9 3 9 1 1 3 4
+    4 9 8 9 7 6 8 4 5 3 8 4 8 0 2 5
+    5 2 5 4 4 0 6 5 8 4 8 6 9 6 7 3
+    1 3 2 5 6 8 0 2 0 8 0 7 6 8 1 2
+    1 9 3 5 2 4 7 6 8 1 7 2 1 3 4 0
+    9 8 5 2 6 3 4 1 3 5 3 1 6 7 6 7
+    6 5 1 9 9 1 0 4 6 1 6 6 1 0 5 6
+    4 5 7 5 7 7 1 1 5 1 9 3 2 4 0 4
+    2 4 2 9 5 8 9 0 7 3 4 2 4 1 2 2
+    1 3 7 5 4 2 2 4 6 7 1 1 8 6 3 8
+    3 8 2 3 0 2 4 7 9 5 2 6 0 1 1 2
+    2 8 2 7 7 7 9 5 6 2 1 3 1 0 1 6
+    9 2 4 0 5 4 8 6 6 4 7 0 1 7 6 2
+    8 0 2 4 7 6 6 7 6 1 2 4 5 4 5 4
+    9 5 2 4 8 6 4 4 7 0 4 4 2 6 6 3
+    2 5 4 8 3 0 6 0 0 2 3 7 3 2 8 3
+    0 0 5 4 7 1 1 7 2 5 9 2 6 3 9 8
+    1 5 6 8 4 2 3 0 5 2 5 0 4 7 8 1
+    7 9 5 4 3 9 2 4 3 3 8 9 2 4 1 7
+    6 9 3 8 5 1 7 9 9 8 7 3 9 9 1 3
+    3 8 7 9 1 4 0 1 7 4 4 2 0 5 0 0
+    4 6 8 1 3 9 1 3 9 4 2 5 7 4 4 0
+    4 2 8 1 0 3 1 1 4 1 7 2 9 6 1 4</pre></td>
+    <td class="cell c2" style=""><pre class="tablecell">m1: 21447
+    m2: 9630
+    m3: -1089
+    m4: 171
+    m5: 12829
+    m6: -408
+    m7: 2356
+    m1: 13188
+    m2: 4653
+    m3: -1745
+    m4: -84
+    m5: 8151
+    m6: -1425
+    m7: 699
+    m1: 92
+    m2: 149
+    m3: -415
+    m4: -251
+    m5: 125
+    m6: -221
+    m7: 15
+    m1: -1837
+    m2: 81
+    m3: 951
+    m4: 292
+    m5: -2043
+    m6: -15
+    m7: -39
+    m1: 8010
+    m2: 4843
+    m3: 204
+    m4: 92
+    m5: 4131
+    m6: 1516
+    m7: 1116
+    m1: 1601
+    m2: -609
+    m3: -221
+    m4: -54
+    m5: 418
+    m6: -2494
+    m7: -761
+    m1: -2888
+    m2: 320
+    m3: 12
+    m4: -403
+    m5: -1548
+    m6: 3354
+    m7: 375
+    m1: 43006
+    m2: 21992
+    m3: -1354
+    m4: -1242
+    m5: 19244
+    m6: -603
+    m7: -2829
+    424 422 372 322 333 404 325 343 499 254 378 295 335 387 238 267
+    407 434 362 395 380 388 333 384 510 300 399 307 316 386 306 296
+    307 278 238 236 255 278 280 278 367 215 271 207 243 268 204 171
+    197 250 220 285 201 224 216 155 312 152 222 130 135 210 154 129
+    320 371 323 337 279 356 299 254 405 226 365 312 281 275 240 238
+    349 337 345 347 354 355 305 308 443 225 364 232 313 345 238 323
+    299 358 296 327 292 332 246 229 394 175 339 266 229 281 244 219
+    278 294 312 263 265 284 233 218 378 187 307 215 249 283 253 183
+    345 430 406 376 303 326 283 322 492 302 368 292 378 410 310 273
+    269 317 347 379 353 358 283 220 332 208 402 269 292 274 284 316
+    359 435 365 468 398 375 440 362 534 308 388 282 373 381 314 333
+    320 448 391 456 349 342 302 298 464 277 372 302 351 375 297 280
+    250 328 258 290 246 255 245 281 345 240 321 189 189 254 174 233
+    258 294 247 353 280 285 309 194 360 178 237 217 214 244 277 178
+    268 366 383 406 330 354 294 248 447 253 369 214 333 320 214 262
+    235 384 293 329 258 324 279 201 368 176 289 264 216 221 199 229</pre></td>
+    <td class="cell c3" style=""><pre class="tablecell">m1: 21447
+    m2: 9630
+    m3: -1089
+    m4: 171
+    m5: 12829
+    m6: -408
+    m7: 2356
+    m1: 13188
+    m2: 4653
+    m3: -1745
+    m4: -84
+    m5: 8151
+    m6: -1425
+    m7: 699
+    m1: 92
+    m2: 149
+    m3: -415
+    m4: -251
+    m5: 125
+    m6: -221
+    m7: 15
+    m1: -1837
+    m2: 81
+    m3: 951
+    m4: 292
+    m5: -2043
+    m6: -15
+    m7: -39
+    m1: 8010
+    m2: 4843
+    m3: 204
+    m4: 92
+    m5: 4131
+    m6: 1516
+    m7: 1116
+    m1: 1601
+    m2: -609
+    m3: -221
+    m4: -54
+    m5: 418
+    m6: -2494
+    m7: -761
+    m1: -2888
+    m2: 320
+    m3: 12
+    m4: -403
+    m5: -1548
+    m6: 3354
+    m7: 375
+    m1: 43006
+    m2: 21992
+    m3: -1354
+    m4: -1242
+    m5: 19244
+    m6: -603
+    m7: -2829
+    424 422 372 322 333 404 325 343 499 254 378 295 335 387 238 267
+    407 434 362 395 380 388 333 384 510 300 399 307 316 386 306 296
+    307 278 238 236 255 278 280 278 367 215 271 207 243 268 204 171
+    197 250 220 285 201 224 216 155 312 152 222 130 135 210 154 129
+    320 371 323 337 279 356 299 254 405 226 365 312 281 275 240 238
+    349 337 345 347 354 355 305 308 443 225 364 232 313 345 238 323
+    299 358 296 327 292 332 246 229 394 175 339 266 229 281 244 219
+    278 294 312 263 265 284 233 218 378 187 307 215 249 283 253 183
+    345 430 406 376 303 326 283 322 492 302 368 292 378 410 310 273
+    269 317 347 379 353 358 283 220 332 208 402 269 292 274 284 316
+    359 435 365 468 398 375 440 362 534 308 388 282 373 381 314 333
+    320 448 391 456 349 342 302 298 464 277 372 302 351 375 297 280
+    250 328 258 290 246 255 245 281 345 240 321 189 189 254 174 233
+    258 294 247 353 280 285 309 194 360 178 237 217 214 244 277 178
+    268 366 383 406 330 354 294 248 447 253 369 214 333 320 214 262
+    235 384 293 329 258 324 279 201 368 176 289 264 216 221 199 229</pre></td>
+    <td class="cell c4 lastcol" style=""><i class="icon fa fa-check text-success fa-fw " title="Pravilno" role="img" aria-label="Pravilno"></i></td>
+    </tr>
+    <tr class="r1">
+    <td class="cell c0" style=""><i class="icon fa fa-check text-success fa-fw " title="Pravilno" role="img" aria-label="Pravilno"></i></td>
+    <td class="cell c1" style=""><pre class="tablecell">32 8
+    5 2 5 6 7 4 3 7 7 8 8 7 6 9 4 7 2 2 7 7 4 8 3 2 6 3 8 7 8 7 9 2
+    4 1 8 5 5 0 6 2 9 7 4 4 0 1 4 7 2 8 7 0 6 2 6 6 8 5 3 7 3 7 9 9
+    8 8 2 0 5 8 8 7 7 5 9 0 7 2 7 5 1 2 7 2 7 9 0 3 2 9 6 6 6 3 7 3
+    3 8 4 2 1 7 8 0 7 1 4 4 9 7 5 4 7 2 6 9 8 2 1 2 7 5 9 3 2 5 6 8
+    5 3 8 0 0 7 0 7 4 2 3 4 6 8 9 3 0 2 2 0 6 2 9 7 5 6 0 0 6 3 4 7
+    9 1 5 4 7 3 8 7 2 7 3 8 6 2 1 2 0 4 7 5 8 5 8 2 9 5 3 0 3 0 2 5
+    9 3 0 3 5 0 7 3 6 6 2 9 9 5 3 9 7 0 0 5 9 3 2 3 9 5 7 1 0 3 0 1
+    6 5 0 4 3 3 1 2 6 6 2 4 0 2 1 8 6 6 6 6 5 9 2 1 8 0 0 4 4 8 5 7
+    2 1 0 8 4 8 7 7 7 3 2 6 5 7 5 9 6 1 9 5 5 1 6 8 8 1 7 0 3 3 3 1
+    9 3 7 7 1 3 5 8 4 7 2 7 0 9 0 7 9 5 1 2 9 6 4 0 1 0 2 5 2 4 0 8
+    6 9 3 5 7 7 1 9 5 8 4 2 4 4 1 7 0 7 1 3 9 2 3 8 4 4 2 4 0 9 3 4
+    8 9 8 6 8 3 8 1 9 5 7 3 7 2 4 6 6 4 1 5 3 1 2 3 0 8 6 1 3 3 3 7
+    1 3 3 6 9 1 7 5 5 9 1 4 6 2 6 4 9 6 5 9 4 7 5 3 7 3 7 9 0 6 0 7
+    1 1 4 6 3 8 0 4 1 7 0 4 1 0 5 5 1 9 6 1 5 2 5 5 4 1 3 6 2 8 8 1
+    8 0 4 8 6 8 0 6 5 1 3 3 2 0 5 7 3 8 4 1 7 6 2 0 3 2 1 7 0 6 6 2
+    4 8 1 3 4 6 0 7 7 7 3 3 6 8 1 5 8 6 7 9 7 4 8 9 1 5 5 5 5 4 0 7
+    2 9 5 4 3 0 6 4 4 2 0 2 1 0 2 7 4 5 5 5 2 6 9 2 9 1 8 8 3 5 9 0
+    9 5 9 4 9 9 6 4 6 4 3 5 6 3 8 4 8 2 6 6 5 9 6 3 4 4 7 9 9 9 0 1
+    3 0 1 2 8 6 5 5 3 3 8 2 4 2 8 6 4 8 7 0 7 8 2 2 2 7 1 1 2 5 6 9
+    2 1 0 6 9 0 7 4 6 8 4 5 4 7 1 8 1 0 4 0 2 7 5 3 0 1 6 3 4 3 2 4
+    8 2 8 8 1 0 7 2 4 6 9 4 4 1 9 0 1 5 1 3 9 5 7 0 1 0 4 5 2 6 3 7
+    3 2 2 2 8 9 1 8 7 0 7 6 2 5 2 5 3 5 9 5 5 8 7 1 5 6 3 9 9 8 5 5
+    5 6 2 5 3 9 4 3 8 8 6 8 3 6 5 7 1 7 5 5 0 1 4 2 5 6 3 3 3 7 7 3
+    5 8 9 1 0 5 4 8 2 5 6 8 1 5 7 5 3 6 4 1 2 7 3 2 5 6 9 8 9 3 2 6
+    9 5 0 3 9 8 5 7 9 6 5 5 4 0 8 8 3 6 6 8 2 0 3 7 2 5 6 3 8 1 6 5
+    2 6 7 1 0 5 0 6 9 1 4 8 4 0 2 0 8 7 8 2 5 5 9 9 0 2 6 7 5 8 4 4
+    8 1 2 2 2 0 6 9 5 1 4 5 2 0 8 6 6 1 6 9 5 9 5 1 9 0 8 1 2 2 9 0
+    5 7 4 6 9 1 4 9 5 4 8 8 0 6 2 1 6 4 8 6 6 8 1 3 3 0 7 2 8 8 7 9
+    4 2 9 1 9 5 5 9 8 4 4 4 3 5 7 7 3 7 4 3 2 3 7 7 2 6 9 4 1 2 6 8
+    8 3 8 0 5 9 5 4 7 8 8 8 1 7 9 6 8 5 3 8 6 7 5 5 9 4 6 0 9 1 9 6
+    7 7 1 6 4 1 9 2 8 7 9 6 2 8 2 4 9 0 0 3 6 9 3 4 2 0 5 3 4 3 4 1
+    3 6 6 4 2 3 4 1 4 4 4 7 8 9 4 5 7 3 1 3 6 2 0 9 9 5 8 3 2 7 5 5
+    7 4 7 2 4 0 6 0 6 4 6 4 0 3 9 4 5 0 9 0 5 0 9 8 2 3 7 7 8 5 8 0
+    3 2 8 1 0 5 0 4 6 5 1 4 8 2 6 7 4 5 1 7 9 2 6 9 5 7 2 4 0 4 8 6
+    9 4 5 5 7 1 5 2 0 8 4 8 8 1 8 8 7 8 7 2 9 7 8 7 9 0 8 8 3 2 7 5
+    7 4 1 3 8 4 8 6 4 6 7 2 7 1 9 1 7 5 7 5 3 9 1 1 9 7 5 5 9 7 4 1
+    3 8 8 7 5 1 9 0 2 8 4 2 2 4 0 3 1 6 7 5 4 6 3 5 9 1 6 4 4 6 2 2
+    5 3 3 5 8 0 4 9 3 6 4 7 6 5 1 4 7 4 7 3 1 0 9 6 3 1 5 1 9 1 6 3
+    1 9 9 6 5 7 2 1 1 0 9 2 2 9 7 0 5 3 3 9 7 3 3 0 4 1 5 6 3 0 4 6
+    7 8 9 0 2 6 1 1 5 1 9 4 5 4 1 7 5 5 1 8 2 2 3 8 7 6 7 3 6 1 0 8
+    2 6 8 1 1 4 8 6 6 3 1 4 1 8 5 6 0 0 6 9 5 0 6 1 7 9 1 7 4 0 4 3
+    1 1 2 6 3 3 3 8 8 7 5 6 9 7 2 2 1 2 8 5 2 5 4 2 1 1 6 0 3 6 3 3
+    0 2 1 3 1 7 6 3 2 6 2 4 1 6 6 5 5 8 4 6 2 9 3 9 3 5 4 6 8 0 3 7
+    3 7 3 9 6 3 5 2 6 1 9 1 2 1 0 9 8 6 0 1 0 6 1 4 2 2 2 1 3 3 3 3
+    8 1 0 3 6 6 8 1 2 5 0 0 4 1 0 4 7 7 9 8 1 1 9 8 7 4 9 6 2 8 0 9
+    6 8 9 6 6 0 3 5 0 1 5 1 9 0 6 4 2 4 2 8 4 1 4 9 0 5 3 0 1 6 4 1
+    0 3 9 2 3 3 5 2 3 3 1 9 9 0 5 3 6 9 8 9 1 4 9 5 8 6 0 9 7 0 5 5
+    6 7 1 2 3 3 5 3 5 5 5 8 8 0 5 4 6 3 1 2 8 8 5 8 8 9 3 0 7 5 7 3
+    2 6 9 9 5 5 3 2 7 5 2 3 9 5 6 3 8 2 6 8 4 0 6 6 8 0 4 1 8 3 3 6
+    5 7 3 4 8 4 4 7 2 8 1 9 6 7 4 0 9 3 5 4 0 0 3 7 6 6 7 4 4 9 2 1
+    9 6 9 4 5 8 2 0 1 9 8 5 2 8 4 6 6 2 8 9 1 4 5 3 8 5 2 1 1 1 6 8
+    2 2 0 9 4 3 6 1 3 2 9 0 2 6 6 7 6 3 4 4 8 0 9 2 1 1 0 4 9 6 3 8
+    6 1 7 7 9 4 3 6 5 9 9 8 2 9 2 4 1 5 8 8 4 1 3 2 1 8 9 9 8 3 6 3
+    5 7 3 1 0 0 4 5 4 3 6 9 1 3 1 4 1 1 3 5 7 2 4 4 0 4 3 7 1 5 3 3
+    1 7 9 9 6 1 1 9 7 5 6 6 9 8 7 4 4 2 9 9 3 0 2 8 6 5 0 2 8 2 6 6
+    0 3 2 1 3 4 0 4 3 2 5 6 3 2 3 1 7 2 6 0 6 1 3 4 7 5 0 9 6 1 3 2
+    9 8 2 3 0 1 7 2 4 3 9 0 6 5 7 3 8 9 5 4 0 4 2 7 9 3 4 0 9 8 7 2
+    3 6 6 9 7 7 5 7 5 4 9 6 1 9 6 3 7 6 5 7 3 8 1 8 3 2 3 1 9 0 3 0
+    8 7 8 2 4 2 0 7 2 6 8 4 5 2 7 3 2 6 2 3 2 3 9 4 6 6 2 4 6 9 2 4
+    1 7 5 5 1 9 3 1 7 2 0 1 4 2 1 5 4 6 4 6 3 4 9 8 0 0 9 4 8 4 0 3
+    2 9 4 4 3 6 8 4 6 2 6 5 7 1 2 3 3 3 5 8 1 2 4 1 6 5 5 7 3 3 1 5
+    0 3 0 9 9 2 8 8 5 6 6 9 9 0 8 3 5 8 3 0 2 5 2 9 4 5 2 8 4 1 6 4
+    6 0 1 8 5 0 0 4 1 7 0 2 8 8 6 6 3 1 5 2 0 0 0 6 8 8 7 8 3 1 3 9
+    3 7 6 3 7 5 2 2 4 2 9 0 0 8 7 6 2 8 9 1 7 9 4 0 7 9 9 9 7 5 2 2</pre></td>
+    <td class="cell c2" style=""><pre class="tablecell">m1: 156381
+    m2: 83794
+    m3: 488
+    m4: -1785
+    m5: 80775
+    m6: 11839
+    m7: 6364
+    m1: 80081
+    m2: 44075
+    m3: 2170
+    m4: -2561
+    m5: 37104
+    m6: 3672
+    m7: -922
+    m1: 145
+    m2: 3080
+    m3: 1804
+    m4: -1280
+    m5: -2667
+    m6: 702
+    m7: 479
+    m1: 3339
+    m2: -372
+    m3: -524
+    m4: 1269
+    m5: 3167
+    m6: -801
+    m7: -159
+    m1: 76358
+    m2: 38282
+    m3: -1371
+    m4: 1342
+    m5: 44339
+    m6: 4353
+    m7: 7411
+    m1: 8350
+    m2: 2563
+    m3: 380
+    m4: -767
+    m5: -601
+    m6: -5009
+    m7: -8551
+    m1: -8889
+    m2: -5295
+    m3: 517
+    m4: 2017
+    m5: 1075
+    m6: -1824
+    m7: 8373
+    m1: 328371
+    m2: 162130
+    m3: 2519
+    m4: 7208
+    m5: 164422
+    m6: 2366
+    m7: -6161
+    776 920 817 829 758 607 807 672 682 810 928 743 880 699 787 783 784 789 880 921 588 618 832 954 880 788 781 786 907 675 660 771
+    622 811 746 728 719 563 642 607 610 753 798 711 742 752 778 620 713 689 863 737 542 598 623 768 881 739 719 760 837 522 631 582
+    655 775 835 647 640 632 654 592 614 735 781 755 670 738 679 668 689 689 835 902 579 513 810 866 762 725 739 792 822 490 617 701
+    678 744 785 747 730 569 631 574 554 692 815 590 723 701 776 677 741 734 806 830 592 471 811 790 788 702 665 720 831 577 638 693
+    539 631 673 560 614 401 511 527 489 540 665 621 668 515 585 569 620 615 737 671 434 394 593 741 681 616 555 632 695 375 539 514
+    666 757 724 674 661 478 607 487 548 643 892 565 568 702 622 590 670 615 799 738 482 475 602 688 707 565 669 595 763 550 569 565
+    588 690 664 633 581 450 619 462 575 559 776 507 590 542 612 534 635 593 665 690 500 433 639 703 645 564 568 535 755 568 551 501
+    534 669 562 597 547 423 581 499 576 603 690 583 623 576 610 548 587 514 663 603 486 420 568 653 640 616 564 568 688 520 554 497
+    659 794 756 659 674 510 609 566 554 640 847 605 750 612 674 580 741 616 754 808 484 448 673 726 841 685 539 569 828 525 604 629
+    597 750 741 640 669 456 548 526 601 593 776 607 682 559 659 589 615 561 690 680 572 466 631 706 614 599 693 589 742 535 560 482
+    588 662 656 624 676 488 601 623 605 709 736 697 716 604 632 585 664 650 744 671 545 479 641 837 715 689 677 663 791 541 599 531
+    581 725 767 677 691 559 679 547 577 702 723 627 668 655 767 617 697 672 813 766 645 563 750 768 815 653 672 734 797 537 602 597
+    607 855 801 767 696 601 683 568 656 707 848 639 760 695 704 619 741 736 844 854 592 551 776 773 821 618 691 676 874 667 559 649
+    496 544 485 573 600 374 462 539 464 629 565 619 680 489 500 450 598 515 639 525 310 378 501 635 638 528 532 516 642 422 473 465
+    574 611 567 548 608 395 582 483 496 644 586 626 588 513 546 508 609 537 682 581 395 418 584 698 654 572 626 591 734 449 510 454
+    626 820 844 750 737 615 626 669 695 727 851 705 780 718 700 686 743 650 866 883 627 450 799 858 780 735 663 679 876 616 607 665
+    578 712 658 607 512 448 480 506 535 613 658 572 730 562 669 555 624 550 614 683 499 387 599 734 741 595 530 567 680 514 555 602
+    721 958 947 854 807 625 842 670 743 825 920 851 887 675 801 753 854 812 973 961 672 566 973 971 902 674 774 846 971 634 730 743
+    543 701 685 625 666 506 588 519 491 677 699 683 584 676 583 529 632 631 767 723 444 517 576 712 727 655 650 671 740 437 511 549
+    454 674 604 512 494 411 506 452 464 503 639 479 542 467 488 451 438 470 573 636 441 456 487 551 584 545 493 492 544 455 408 453
+    495 604 650 604 638 470 578 514 521 627 672 621 614 578 687 537 587 640 774 683 485 495 631 647 632 603 642 760 737 461 535 542
+    651 907 803 781 720 593 725 630 651 729 856 721 726 712 661 722 733 714 810 863 509 531 722 891 790 710 700 695 878 526 596 672
+    583 733 668 717 684 504 659 639 594 681 736 657 768 643 709 631 739 649 744 732 474 515 673 826 746 671 596 594 789 518 620 592
+    648 864 816 644 631 580 590 588 625 647 815 727 778 578 701 688 745 746 717 787 549 565 768 865 751 657 688 681 791 549 593 618
+    611 819 813 691 684 600 697 574 652 716 811 694 717 720 699 665 763 652 868 823 557 502 810 796 883 735 666 737 905 552 605 675
+    542 723 744 669 661 556 529 603 609 675 682 701 699 618 623 656 705 599 751 736 488 387 684 779 757 649 580 711 730 431 541 646
+    617 696 690 584 500 421 533 418 517 570 760 568 614 596 653 595 631 540 653 708 465 361 643 684 720 611 515 622 752 473 547 650
+    676 872 846 752 724 584 683 575 628 747 919 671 741 695 756 740 698 729 796 821 596 577 699 800 844 768 727 808 797 596 606 710
+    661 869 880 700 726 540 610 603 575 724 809 727 756 705 734 679 733 716 840 798 599 549 766 859 902 722 694 740 858 546 592 644
+    753 948 925 880 799 562 779 711 718 822 976 834 916 827 866 801 870 793 984 931 658 567 890 948 945 788 777 841 1019 644 762 765
+    494 703 719 627 542 474 577 532 583 577 691 567 653 573 660 555 568 530 659 760 565 427 625 692 615 604 566 643 693 493 550 560
+    636 720 677 694 689 502 616 576 551 650 762 598 764 547 724 603 744 732 734 697 536 506 691 823 775 656 636 679 782 586 594 575</pre></td>
+    <td class="cell c3" style=""><pre class="tablecell">m1: 156381
+    m2: 83794
+    m3: 488
+    m4: -1785
+    m5: 80775
+    m6: 11839
+    m7: 6364
+    m1: 80081
+    m2: 44075
+    m3: 2170
+    m4: -2561
+    m5: 37104
+    m6: 3672
+    m7: -922
+    m1: 145
+    m2: 3080
+    m3: 1804
+    m4: -1280
+    m5: -2667
+    m6: 702
+    m7: 479
+    m1: 3339
+    m2: -372
+    m3: -524
+    m4: 1269
+    m5: 3167
+    m6: -801
+    m7: -159
+    m1: 76358
+    m2: 38282
+    m3: -1371
+    m4: 1342
+    m5: 44339
+    m6: 4353
+    m7: 7411
+    m1: 8350
+    m2: 2563
+    m3: 380
+    m4: -767
+    m5: -601
+    m6: -5009
+    m7: -8551
+    m1: -8889
+    m2: -5295
+    m3: 517
+    m4: 2017
+    m5: 1075
+    m6: -1824
+    m7: 8373
+    m1: 328371
+    m2: 162130
+    m3: 2519
+    m4: 7208
+    m5: 164422
+    m6: 2366
+    m7: -6161
+    776 920 817 829 758 607 807 672 682 810 928 743 880 699 787 783 784 789 880 921 588 618 832 954 880 788 781 786 907 675 660 771
+    622 811 746 728 719 563 642 607 610 753 798 711 742 752 778 620 713 689 863 737 542 598 623 768 881 739 719 760 837 522 631 582
+    655 775 835 647 640 632 654 592 614 735 781 755 670 738 679 668 689 689 835 902 579 513 810 866 762 725 739 792 822 490 617 701
+    678 744 785 747 730 569 631 574 554 692 815 590 723 701 776 677 741 734 806 830 592 471 811 790 788 702 665 720 831 577 638 693
+    539 631 673 560 614 401 511 527 489 540 665 621 668 515 585 569 620 615 737 671 434 394 593 741 681 616 555 632 695 375 539 514
+    666 757 724 674 661 478 607 487 548 643 892 565 568 702 622 590 670 615 799 738 482 475 602 688 707 565 669 595 763 550 569 565
+    588 690 664 633 581 450 619 462 575 559 776 507 590 542 612 534 635 593 665 690 500 433 639 703 645 564 568 535 755 568 551 501
+    534 669 562 597 547 423 581 499 576 603 690 583 623 576 610 548 587 514 663 603 486 420 568 653 640 616 564 568 688 520 554 497
+    659 794 756 659 674 510 609 566 554 640 847 605 750 612 674 580 741 616 754 808 484 448 673 726 841 685 539 569 828 525 604 629
+    597 750 741 640 669 456 548 526 601 593 776 607 682 559 659 589 615 561 690 680 572 466 631 706 614 599 693 589 742 535 560 482
+    588 662 656 624 676 488 601 623 605 709 736 697 716 604 632 585 664 650 744 671 545 479 641 837 715 689 677 663 791 541 599 531
+    581 725 767 677 691 559 679 547 577 702 723 627 668 655 767 617 697 672 813 766 645 563 750 768 815 653 672 734 797 537 602 597
+    607 855 801 767 696 601 683 568 656 707 848 639 760 695 704 619 741 736 844 854 592 551 776 773 821 618 691 676 874 667 559 649
+    496 544 485 573 600 374 462 539 464 629 565 619 680 489 500 450 598 515 639 525 310 378 501 635 638 528 532 516 642 422 473 465
+    574 611 567 548 608 395 582 483 496 644 586 626 588 513 546 508 609 537 682 581 395 418 584 698 654 572 626 591 734 449 510 454
+    626 820 844 750 737 615 626 669 695 727 851 705 780 718 700 686 743 650 866 883 627 450 799 858 780 735 663 679 876 616 607 665
+    578 712 658 607 512 448 480 506 535 613 658 572 730 562 669 555 624 550 614 683 499 387 599 734 741 595 530 567 680 514 555 602
+    721 958 947 854 807 625 842 670 743 825 920 851 887 675 801 753 854 812 973 961 672 566 973 971 902 674 774 846 971 634 730 743
+    543 701 685 625 666 506 588 519 491 677 699 683 584 676 583 529 632 631 767 723 444 517 576 712 727 655 650 671 740 437 511 549
+    454 674 604 512 494 411 506 452 464 503 639 479 542 467 488 451 438 470 573 636 441 456 487 551 584 545 493 492 544 455 408 453
+    495 604 650 604 638 470 578 514 521 627 672 621 614 578 687 537 587 640 774 683 485 495 631 647 632 603 642 760 737 461 535 542
+    651 907 803 781 720 593 725 630 651 729 856 721 726 712 661 722 733 714 810 863 509 531 722 891 790 710 700 695 878 526 596 672
+    583 733 668 717 684 504 659 639 594 681 736 657 768 643 709 631 739 649 744 732 474 515 673 826 746 671 596 594 789 518 620 592
+    648 864 816 644 631 580 590 588 625 647 815 727 778 578 701 688 745 746 717 787 549 565 768 865 751 657 688 681 791 549 593 618
+    611 819 813 691 684 600 697 574 652 716 811 694 717 720 699 665 763 652 868 823 557 502 810 796 883 735 666 737 905 552 605 675
+    542 723 744 669 661 556 529 603 609 675 682 701 699 618 623 656 705 599 751 736 488 387 684 779 757 649 580 711 730 431 541 646
+    617 696 690 584 500 421 533 418 517 570 760 568 614 596 653 595 631 540 653 708 465 361 643 684 720 611 515 622 752 473 547 650
+    676 872 846 752 724 584 683 575 628 747 919 671 741 695 756 740 698 729 796 821 596 577 699 800 844 768 727 808 797 596 606 710
+    661 869 880 700 726 540 610 603 575 724 809 727 756 705 734 679 733 716 840 798 599 549 766 859 902 722 694 740 858 546 592 644
+    753 948 925 880 799 562 779 711 718 822 976 834 916 827 866 801 870 793 984 931 658 567 890 948 945 788 777 841 1019 644 762 765
+    494 703 719 627 542 474 577 532 583 577 691 567 653 573 660 555 568 530 659 760 565 427 625 692 615 604 566 643 693 493 550 560
+    636 720 677 694 689 502 616 576 551 650 762 598 764 547 724 603 744 732 734 697 536 506 691 823 775 656 636 679 782 586 594 575</pre></td>
+    <td class="cell c4 lastcol" style=""><i class="icon fa fa-check text-success fa-fw " title="Pravilno" role="img" aria-label="Pravilno"></i></td>
+    </tr>
+    <tr class="r0 lastrow">
+    <td class="cell c0" style=""><i class="icon fa fa-check text-success fa-fw " title="Pravilno" role="img" aria-label="Pravilno"></i></td>
+    <td class="cell c1" style=""><pre class="tablecell">32 1
+    8 0 3 7 3 0 9 8 2 2 2 0 9 1 5 6 5 0 2 1 3 4 2 5 2 5 2 9 0 0 0 3
+    8 9 3 2 5 6 4 4 0 6 2 0 1 9 1 6 6 6 5 6 5 8 5 7 5 6 0 1 8 7 9 3
+    8 7 6 1 6 9 0 8 0 0 0 2 3 7 9 4 9 9 9 9 2 3 6 9 7 0 1 0 3 1 0 1
+    1 5 9 7 4 5 2 0 2 6 5 4 7 9 2 4 8 1 7 2 7 2 0 5 0 1 2 8 9 5 1 5
+    6 5 4 3 7 6 5 8 0 3 6 9 2 5 2 4 2 3 1 8 9 7 0 4 3 9 5 8 1 1 6 8
+    2 9 0 2 0 5 7 4 5 5 1 8 0 1 7 5 7 7 6 1 7 9 6 8 4 8 4 1 6 5 0 0
+    1 5 9 9 6 8 7 7 0 6 9 0 8 1 8 3 2 8 9 6 6 9 5 7 0 2 3 4 6 6 3 4
+    4 5 7 9 4 4 3 0 9 3 9 2 0 0 3 4 7 8 2 4 9 1 0 4 7 7 0 2 2 0 6 5
+    2 0 0 6 5 9 0 9 2 1 5 9 4 7 2 6 4 9 3 6 2 8 2 9 2 4 8 7 9 2 0 8
+    6 5 9 8 9 9 4 3 5 5 8 5 1 4 9 8 6 4 3 1 2 2 2 1 4 3 9 3 0 7 9 5
+    5 4 1 8 1 9 7 5 8 8 0 1 8 4 6 7 1 7 3 1 8 9 2 3 8 2 5 1 2 3 7 6
+    4 7 4 0 8 7 8 7 6 6 2 6 7 9 7 0 3 7 9 4 2 6 3 2 1 8 3 9 3 3 5 1
+    1 2 2 3 3 3 7 1 4 1 6 4 7 3 2 4 8 2 0 9 4 0 6 0 5 3 5 0 6 6 8 2
+    2 1 6 8 2 4 3 6 3 1 3 2 2 6 7 7 3 2 9 9 5 0 9 9 7 1 3 2 5 2 3 0
+    9 6 2 1 5 6 3 2 7 6 6 8 3 6 0 1 3 1 6 5 7 7 8 2 6 4 5 9 1 6 6 8
+    7 8 2 6 2 3 9 7 2 9 7 3 4 0 0 5 5 0 2 7 3 3 4 0 5 3 2 0 6 5 4 5
+    2 1 0 6 7 7 1 4 4 1 0 7 5 2 3 4 1 9 4 7 1 0 6 2 8 6 7 8 9 1 1 9
+    7 7 3 6 7 8 9 4 9 7 4 2 1 0 4 1 6 0 5 5 7 9 7 9 4 1 1 8 6 1 5 5
+    7 6 0 9 1 4 7 2 5 6 9 1 6 5 0 4 2 5 4 3 2 4 5 5 9 9 9 8 8 6 7 7
+    8 8 5 7 2 1 0 8 6 3 0 7 1 5 1 4 5 6 7 9 0 3 7 7 2 0 3 0 9 7 8 3
+    4 9 8 2 0 2 1 8 6 3 0 5 1 7 3 9 3 1 5 8 4 1 6 2 6 6 5 6 2 0 5 2
+    6 3 6 6 3 9 5 4 9 2 9 4 8 1 4 1 1 3 2 9 3 4 6 1 4 5 6 7 5 1 6 0
+    7 6 9 5 7 1 5 7 0 8 9 6 2 0 4 3 2 6 2 1 0 9 5 4 3 5 7 2 1 3 3 1
+    6 0 5 7 8 7 7 9 4 0 7 0 7 7 3 1 1 7 4 0 5 7 0 7 1 0 8 6 7 2 4 0
+    7 2 3 7 4 0 7 3 5 6 7 9 6 6 6 0 4 1 6 4 5 2 7 1 7 7 0 9 6 5 1 8
+    2 0 6 8 0 7 7 4 6 1 0 7 6 4 8 9 5 3 3 6 4 4 2 7 8 8 7 8 4 4 4 3
+    0 3 7 7 3 2 3 8 3 0 1 3 1 9 6 3 4 9 4 4 6 4 6 9 0 6 2 0 2 5 1 1
+    1 9 5 9 8 0 3 6 3 6 0 5 4 3 6 9 2 9 6 7 0 3 0 1 1 4 3 1 3 1 2 1
+    7 9 0 8 6 8 7 7 2 7 4 3 2 4 5 1 1 8 9 5 7 4 5 0 9 1 7 2 6 1 8 8
+    5 3 9 6 0 9 8 2 3 5 4 8 1 8 2 8 0 2 1 4 8 5 0 6 3 6 8 6 9 8 6 2
+    4 4 0 4 6 2 3 4 6 9 3 5 2 0 5 1 1 6 7 1 9 4 2 8 9 9 8 6 4 3 0 0
+    1 5 7 9 8 5 0 8 9 6 8 1 2 2 6 2 4 5 5 2 9 1 9 0 7 0 3 9 3 8 5 8
+    2 0 6 5 0 9 7 1 3 8 8 3 5 8 2 3 7 3 7 4 2 0 7 4 7 4 4 3 4 0 0 8
+    2 6 9 7 2 7 3 2 3 2 2 4 8 1 2 0 5 2 8 9 3 4 7 7 3 2 8 1 1 4 2 4
+    8 2 6 3 3 6 6 3 6 0 0 0 0 6 7 5 9 5 8 2 9 4 9 2 0 5 9 0 2 0 2 4
+    4 4 7 5 8 0 9 9 5 2 5 0 4 7 0 6 9 2 0 8 1 8 0 7 7 0 4 2 2 0 6 5
+    5 4 3 5 5 3 0 0 8 7 4 5 4 2 4 5 5 7 9 3 8 4 4 7 7 0 5 9 7 7 9 7
+    6 5 8 9 3 3 8 3 4 7 7 1 8 2 6 1 4 3 3 8 3 9 1 5 7 7 1 9 5 1 3 6
+    7 8 5 4 1 7 6 2 6 4 9 3 1 7 2 6 1 8 3 8 5 1 5 2 2 4 6 6 0 2 3 2
+    2 7 3 8 3 8 0 5 1 5 0 5 3 9 9 5 5 8 3 6 1 8 2 8 8 0 4 3 2 4 5 0
+    0 1 2 5 3 9 3 8 4 0 0 5 6 3 5 6 8 4 3 8 7 7 9 1 5 9 4 4 0 3 9 5
+    2 0 5 9 1 6 9 9 5 0 4 1 8 3 1 8 6 9 8 8 6 5 6 7 0 9 1 1 9 3 8 0
+    1 8 1 0 6 8 5 3 1 5 0 5 2 8 2 3 0 6 0 8 6 5 2 4 6 8 0 4 4 0 5 0
+    5 2 8 1 4 4 5 8 1 2 9 1 1 4 9 9 9 2 2 9 8 6 2 8 7 4 6 5 3 3 5 6
+    5 5 6 4 7 9 6 4 6 3 2 4 5 9 6 3 9 1 8 3 2 7 0 6 3 5 5 0 5 6 9 6
+    0 5 9 7 8 3 3 9 1 5 1 1 0 9 2 1 4 2 6 7 1 2 3 1 9 2 7 3 7 6 6 0
+    4 1 2 2 0 2 5 1 0 4 1 7 9 6 3 2 3 8 6 2 0 5 7 5 2 8 0 3 7 7 7 0
+    4 2 8 6 2 9 2 9 0 5 1 5 9 7 7 9 7 1 3 6 7 4 2 3 7 0 7 5 6 0 9 1
+    5 4 9 1 7 0 3 0 2 3 9 0 8 8 2 3 9 7 6 9 0 7 5 6 5 4 5 2 4 3 2 9
+    4 4 7 8 5 1 8 9 4 0 6 8 1 9 9 8 4 0 4 7 9 8 2 7 8 2 0 8 9 3 0 1
+    1 4 7 0 0 0 2 2 3 0 4 2 0 3 6 7 3 6 0 1 0 3 5 3 4 0 4 4 2 1 3 9
+    2 3 6 4 8 0 7 9 8 5 3 1 3 3 7 8 0 2 2 2 1 2 1 1 7 5 2 6 8 7 1 6
+    8 6 2 7 5 6 1 1 0 3 3 0 4 4 7 4 9 5 3 4 5 8 2 3 8 0 7 8 5 8 0 2
+    3 4 6 7 0 1 2 3 0 7 5 8 8 4 8 0 1 7 8 9 0 5 4 1 1 3 6 2 2 5 8 8
+    9 5 9 4 6 8 1 6 8 4 5 1 8 5 4 9 0 7 6 6 6 2 1 2 6 1 0 7 6 9 7 2
+    3 4 9 4 1 9 3 2 5 8 0 1 5 9 9 2 6 5 8 2 2 6 7 0 2 5 0 8 6 3 7 0
+    6 3 2 8 8 4 1 9 1 7 8 3 6 6 2 5 4 5 8 6 3 2 0 2 9 6 3 5 1 0 2 2
+    7 6 2 1 3 5 9 5 2 6 4 1 1 8 7 6 4 5 2 2 6 1 3 0 4 1 9 5 3 4 5 6
+    1 1 4 3 7 7 5 2 3 3 6 8 3 9 6 1 8 4 2 5 3 4 8 3 4 8 1 7 0 5 7 3
+    9 3 7 3 0 8 7 3 1 5 6 8 3 3 3 0 2 7 7 7 7 2 8 7 7 2 5 9 6 2 1 1
+    9 2 8 3 0 5 3 7 2 0 9 2 9 3 6 1 3 2 8 7 5 8 8 5 0 4 6 0 4 3 8 6
+    9 0 2 8 8 5 7 7 9 9 9 7 4 6 2 4 4 8 6 6 8 7 6 3 7 7 8 9 8 5 1 4
+    7 4 5 9 3 5 7 5 0 6 1 8 1 4 3 8 3 6 2 0 6 5 0 1 2 9 6 8 9 8 8 7
+    6 2 3 6 1 1 7 5 6 4 6 0 8 5 7 3 5 3 7 4 8 6 9 0 1 4 0 9 6 2 2 1</pre></td>
+    <td class="cell c2" style=""><pre class="tablecell">m1: 19866
+    m2: 10744
+    m3: 264
+    m4: -264
+    m5: 6771
+    m6: 532
+    m7: -5418
+    m1: 9936
+    m2: 6063
+    m3: 385
+    m4: -1411
+    m5: 3596
+    m6: 237
+    m7: -770
+    m1: 261
+    m2: 516
+    m3: 420
+    m4: -180
+    m5: -210
+    m6: -13
+    m7: 17
+    m1: 134
+    m2: -144
+    m3: 96
+    m4: 344
+    m5: 164
+    m6: 30
+    m7: -260
+    m1: 8778
+    m2: 4225
+    m3: -225
+    m4: 1106
+    m5: 5024
+    m6: 810
+    m7: 213
+    m1: -2112
+    m2: -1258
+    m3: -154
+    m4: 35
+    m5: 754
+    m6: -146
+    m7: 3625
+    m1: 0
+    m2: 726
+    m3: 72
+    m4: -45
+    m5: 2990
+    m6: 1529
+    m7: 6256
+    m1: 34846
+    m2: 17287
+    m3: 1006
+    m4: 918
+    m5: 20341
+    m6: -983
+    m7: 7839
+    m1: 9130
+    m2: 4185
+    m3: 415
+    m4: 581
+    m5: 3312
+    m6: -1860
+    m7: -1736
+    m1: 4650
+    m2: 3360
+    m3: 414
+    m4: -729
+    m5: 1099
+    m6: -370
+    m7: 154
+    m1: 968
+    m2: 520
+    m3: 230
+    m4: -210
+    m5: 195
+    m6: -368
+    m7: -138
+    m1: -390
+    m2: -560
+    m3: 185
+    m4: 205
+    m5: 219
+    m6: 0
+    m7: 0
+    m1: 3936
+    m2: 959
+    m3: -89
+    m4: 1200
+    m5: 2499
+    m6: -621
+    m7: -680
+    m1: -1056
+    m2: 195
+    m3: -140
+    m4: -4
+    m5: 513
+    m6: 1596
+    m7: 2380
+    m1: -100
+    m2: 46
+    m3: 60
+    m4: -96
+    m5: 243
+    m6: 240
+    m7: 682
+    m1: 16656
+    m2: 8454
+    m3: 1470
+    m4: 0
+    m5: 8793
+    m6: 1576
+    m7: 650
+    m1: -375
+    m2: -930
+    m3: -300
+    m4: 1125
+    m5: 260
+    m6: -270
+    m7: -460
+    m1: -888
+    m2: -936
+    m3: -120
+    m4: 1012
+    m5: 0
+    m6: -64
+    m7: -143
+    m1: 400
+    m2: 49
+    m3: -90
+    m4: -198
+    m5: 315
+    m6: 45
+    m7: -5
+    m1: -805
+    m2: -352
+    m3: 216
+    m4: -161
+    m5: -255
+    m6: -45
+    m7: 540
+    m1: 504
+    m2: 184
+    m3: -180
+    m4: 84
+    m5: 395
+    m6: 20
+    m7: 63
+    m1: -5
+    m2: 135
+    m3: 0
+    m4: -16
+    m5: 126
+    m6: 140
+    m7: 210
+    m1: 84
+    m2: 18
+    m3: 0
+    m4: -54
+    m5: -270
+    m6: -40
+    m7: -300
+    m1: 170
+    m2: -199
+    m3: 264
+    m4: -1005
+    m5: 899
+    m6: 308
+    m7: -280
+    m1: 2449
+    m2: 455
+    m3: -432
+    m4: -774
+    m5: 1416
+    m6: -266
+    m7: -260
+    m1: 832
+    m2: -252
+    m3: -350
+    m4: 156
+    m5: 1071
+    m6: 1
+    m7: -17
+    m1: -517
+    m2: -444
+    m3: -504
+    m4: 506
+    m5: 35
+    m6: 320
+    m7: -132
+    m1: -288
+    m2: -84
+    m3: 120
+    m4: 0
+    m5: -144
+    m6: -4
+    m7: 72
+    m1: 1476
+    m2: 847
+    m3: 90
+    m4: -814
+    m5: 546
+    m6: -100
+    m7: 16
+    m1: -300
+    m2: 10
+    m3: 363
+    m4: -16
+    m5: 100
+    m6: -169
+    m7: 456
+    m1: 66
+    m2: 48
+    m3: -18
+    m4: 108
+    m5: 342
+    m6: 180
+    m7: 64
+    m1: 1960
+    m2: 1260
+    m3: -842
+    m4: -268
+    m5: 1420
+    m6: 381
+    m7: 556
+    m1: 9768
+    m2: 5883
+    m3: -56
+    m4: -760
+    m5: 4107
+    m6: 1971
+    m7: -1344
+    m1: 5330
+    m2: 2584
+    m3: 60
+    m4: -560
+    m5: 2948
+    m6: 252
+    m7: 132
+    m1: -616
+    m2: -178
+    m3: 160
+    m4: 45
+    m5: -366
+    m6: -36
+    m7: 112
+    m1: 385
+    m2: 420
+    m3: -24
+    m4: 93
+    m5: 50
+    m6: 90
+    m7: -50
+    m1: 4983
+    m2: 3240
+    m3: -124
+    m4: -178
+    m5: 2205
+    m6: 899
+    m7: -124
+    m1: -132
+    m2: -805
+    m3: 16
+    m4: 54
+    m5: 713
+    m6: -1470
+    m7: 1425
+    m1: 1539
+    m2: 903
+    m3: -12
+    m4: -91
+    m5: 1368
+    m6: 158
+    m7: 1258
+    m1: 18531
+    m2: 10044
+    m3: -746
+    m4: 948
+    m5: 10137
+    m6: -169
+    m7: 4288
+    m1: 1488
+    m2: -1334
+    m3: -102
+    m4: -110
+    m5: 1782
+    m6: -4130
+    m7: 2190
+    m1: 720
+    m2: -31
+    m3: 42
+    m4: -12
+    m5: 957
+    m6: -819
+    m7: 1386
+    m1: 13
+    m2: -147
+    m3: 20
+    m4: 39
+    m5: -30
+    m6: -396
+    m7: 0
+    m1: -231
+    m2: 20
+    m3: 286
+    m4: -2
+    m5: -352
+    m6: -13
+    m7: -420
+    m1: 640
+    m2: -864
+    m3: -126
+    m4: -64
+    m5: -370
+    m6: -2310
+    m7: -1600
+    m1: 0
+    m2: 1430
+    m3: 3
+    m4: 27
+    m5: 432
+    m6: 2992
+    m7: 876
+    m1: -206
+    m2: -432
+    m3: -48
+    m4: 23
+    m5: -2035
+    m6: -833
+    m7: -4410
+    m1: 612
+    m2: 2067
+    m3: -252
+    m4: -327
+    m5: -3010
+    m6: 3928
+    m7: -5705
+    m1: -3520
+    m2: 75
+    m3: 80
+    m4: 252
+    m5: 0
+    m6: 3496
+    m7: 3058
+    m1: -680
+    m2: -195
+    m3: -35
+    m4: 169
+    m5: 460
+    m6: 234
+    m7: 1296
+    m1: 80
+    m2: -18
+    m3: 110
+    m4: 0
+    m5: 18
+    m6: -247
+    m7: 10
+    m1: 84
+    m2: 10
+    m3: 0
+    m4: -96
+    m5: -18
+    m6: 70
+    m7: 21
+    m1: -225
+    m2: 396
+    m3: 13
+    m4: -80
+    m5: -390
+    m6: 1036
+    m7: -469
+    m1: 2128
+    m2: -414
+    m3: -285
+    m4: 3
+    m5: 830
+    m6: -2660
+    m7: -596
+    m1: 2907
+    m2: 700
+    m3: -18
+    m4: -286
+    m5: -830
+    m6: -1431
+    m7: -4060
+    m1: 178
+    m2: 438
+    m3: 143
+    m4: 67
+    m5: -17
+    m6: 436
+    m7: -285
+    m1: 80396
+    m2: 38478
+    m3: -1114
+    m4: 2637
+    m5: 41585
+    m6: -1711
+    m7: 927
+    m1: 7680
+    m2: 5474
+    m3: 0
+    m4: -702
+    m5: 2444
+    m6: 1980
+    m7: -1734
+    m1: 4270
+    m2: 2961
+    m3: 200
+    m4: -864
+    m5: 1680
+    m6: 741
+    m7: -46
+    m1: 574
+    m2: 89
+    m3: 114
+    m4: 352
+    m5: 348
+    m6: 70
+    m7: -360
+    m1: 138
+    m2: -216
+    m3: -84
+    m4: 102
+    m5: 216
+    m6: -104
+    m7: -60
+    m1: 4075
+    m2: 2340
+    m3: -284
+    m4: 276
+    m5: 1584
+    m6: 357
+    m7: -868
+    m1: -402
+    m2: -700
+    m3: 0
+    m4: 6
+    m5: 832
+    m6: -980
+    m7: 2112
+    m1: 2205
+    m2: 589
+    m3: -147
+    m4: -84
+    m5: 1216
+    m6: -896
+    m7: 171
+    m1: 14202
+    m2: 7907
+    m3: 1790
+    m4: 148
+    m5: 7623
+    m6: 340
+    m7: 3223
+    m1: 4170
+    m2: 2414
+    m3: -132
+    m4: -146
+    m5: 1508
+    m6: 84
+    m7: -644
+    m1: 2533
+    m2: 1672
+    m3: 75
+    m4: -370
+    m5: 888
+    m6: 54
+    m7: -12
+    m1: 923
+    m2: 372
+    m3: 114
+    m4: -66
+    m5: 427
+    m6: -144
+    m7: -110 ...snip... 9 470 476 424 333 518 383
+    708 570 919 853 537 718 693 733 507 691 672 495 727 836 719 654 673 709 814 830 616 711 614 527 732 566 703 735 762 578 684 627
+    558 509 880 686 521 585 552 595 482 589 567 415 671 805 733 587 661 609 742 709 441 669 553 558 749 480 500 646 659 499 562 556
+    648 477 825 606 499 632 648 609 460 462 575 357 607 729 617 503 742 600 706 770 580 713 641 556 608 507 638 575 622 432 617 525
+    689 595 784 743 527 730 729 660 443 683 632 496 600 829 801 637 719 694 691 805 671 692 593 566 772 538 665 807 675 549 635 559
+    640 524 816 665 439 679 601 634 410 536 668 468 712 771 738 613 675 683 674 856 558 709 614 539 646 522 599 658 559 511 649 537
+    776 662 920 808 578 769 809 717 627 640 651 580 751 932 841 705 748 822 802 889 678 885 684 674 730 639 640 777 771 591 784 611
+    591 497 649 625 508 602 655 620 403 473 508 381 567 722 601 625 697 568 562 717 625 670 524 471 653 535 538 636 554 381 537 500
+    643 546 893 721 556 676 695 764 466 630 682 518 690 892 878 594 727 609 704 883 620 818 608 610 787 535 537 787 692 504 736 538
+    706 526 823 791 614 765 801 705 529 664 658 595 712 895 686 709 834 769 726 871 742 785 688 636 782 722 654 804 717 517 766 605
+    651 529 791 890 528 739 729 761 462 600 633 548 763 847 719 662 781 675 725 860 599 793 572 553 714 643 591 719 651 525 750 540
+    681 607 880 754 508 760 750 687 518 609 652 589 620 841 770 663 705 775 778 857 657 715 682 645 753 603 699 749 706 611 743 629
+    589 445 628 548 566 574 558 593 439 478 549 382 523 672 520 576 548 529 517 642 518 571 402 411 586 539 504 577 541 483 562 491
+    586 488 781 605 535 631 539 670 459 523 485 365 585 767 655 648 617 608 584 649 471 623 488 455 694 473 495 630 591 474 633 456
+    706 539 834 778 564 794 723 713 526 675 720 520 691 788 716 665 718 754 767 882 708 685 671 551 796 644 643 829 690 574 666 626
+    575 486 686 660 476 668 627 637 471 512 603 378 637 698 538 609 599 620 607 771 535 604 507 517 590 530 549 540 532 409 575 499
+    659 445 746 634 521 589 650 728 487 508 676 444 623 721 720 616 633 521 637 726 630 662 529 546 715 476 465 737 610 461 617 504
+    733 589 893 789 464 804 699 641 555 654 696 497 817 772 722 643 722 824 821 914 636 765 733 588 700 643 614 782 659 554 746 639
+    759 606 882 815 629 873 860 840 552 692 771 590 739 968 712 687 751 743 773 943 724 753 691 582 791 702 661 815 697 522 776 599
+    598 453 890 722 534 673 639 767 526 532 607 453 639 779 715 695 708 601 684 770 577 714 612 547 692 545 605 633 652 519 660 613
+    554 460 762 638 477 699 556 677 378 486 458 406 564 709 660 623 658 569 606 687 544 550 550 464 673 464 616 581 532 464 587 466
+    649 541 755 658 557 768 732 675 498 566 581 513 614 776 682 627 655 644 625 787 613 683 553 546 708 654 560 674 587 505 689 590
+    564 488 706 630 457 700 638 577 455 540 548 508 565 789 643 604 639 686 669 762 606 607 576 562 592 538 539 579 549 432 653 486
+    583 552 748 684 493 721 613 557 438 574 546 549 538 845 691 488 673 639 657 758 537 723 579 561 684 525 550 664 569 469 690 506
+    739 539 785 645 555 738 739 742 523 586 727 435 653 838 652 685 710 742 742 853 675 668 651 589 749 579 635 700 656 514 666 559
+    754 532 861 719 582 765 770 779 477 644 683 518 692 922 794 691 808 694 704 833 637 749 632 548 769 633 671 768 642 508 741 572
+    540 487 712 596 499 548 532 601 429 476 433 371 477 772 670 562 612 560 565 644 490 634 487 439 634 380 525 591 565 488 559 399
+    466 424 708 597 443 521 576 647 426 388 449 434 530 663 611 625 636 498 562 664 515 598 483 560 587 386 542 498 547 419 617 469
+    694 608 867 880 577 709 753 762 527 614 749 550 741 841 730 719 732 738 741 897 642 785 623 657 802 625 587 806 699 573 699 612
+    768 530 877 788 549 821 802 781 477 644 703 501 645 872 769 645 791 685 713 883 726 758 684 541 735 662 749 767 671 498 710 558
+    589 469 665 643 461 702 608 615 414 525 604 478 600 747 675 594 691 682 655 737 581 646 600 541 672 530 526 685 552 473 635 477
+    770 556 767 817 633 769 700 753 568 588 626 550 743 811 687 707 770 808 761 884 763 835 673 654 823 626 600 818 723 569 697 519</pre></td>
+    <td class="cell c3" style=""><pre class="tablecell">m1: 19866
+    m2: 10744
+    m3: 264
+    m4: -264
+    m5: 6771
+    m6: 532
+    m7: -5418
+    m1: 9936
+    m2: 6063
+    m3: 385
+    m4: -1411
+    m5: 3596
+    m6: 237
+    m7: -770
+    m1: 261
+    m2: 516
+    m3: 420
+    m4: -180
+    m5: -210
+    m6: -13
+    m7: 17
+    m1: 134
+    m2: -144
+    m3: 96
+    m4: 344
+    m5: 164
+    m6: 30
+    m7: -260
+    m1: 8778
+    m2: 4225
+    m3: -225
+    m4: 1106
+    m5: 5024
+    m6: 810
+    m7: 213
+    m1: -2112
+    m2: -1258
+    m3: -154
+    m4: 35
+    m5: 754
+    m6: -146
+    m7: 3625
+    m1: 0
+    m2: 726
+    m3: 72
+    m4: -45
+    m5: 2990
+    m6: 1529
+    m7: 6256
+    m1: 34846
+    m2: 17287
+    m3: 1006
+    m4: 918
+    m5: 20341
+    m6: -983
+    m7: 7839
+    m1: 9130
+    m2: 4185
+    m3: 415
+    m4: 581
+    m5: 3312
+    m6: -1860
+    m7: -1736
+    m1: 4650
+    m2: 3360
+    m3: 414
+    m4: -729
+    m5: 1099
+    m6: -370
+    m7: 154
+    m1: 968
+    m2: 520
+    m3: 230
+    m4: -210
+    m5: 195
+    m6: -368
+    m7: -138
+    m1: -390
+    m2: -560
+    m3: 185
+    m4: 205
+    m5: 219
+    m6: 0
+    m7: 0
+    m1: 3936
+    m2: 959
+    m3: -89
+    m4: 1200
+    m5: 2499
+    m6: -621
+    m7: -680
+    m1: -1056
+    m2: 195
+    m3: -140
+    m4: -4
+    m5: 513
+    m6: 1596
+    m7: 2380
+    m1: -100
+    m2: 46
+    m3: 60
+    m4: -96
+    m5: 243
+    m6: 240
+    m7: 682
+    m1: 16656
+    m2: 8454
+    m3: 1470
+    m4: 0
+    m5: 8793
+    m6: 1576
+    m7: 650
+    m1: -375
+    m2: -930
+    m3: -300
+    m4: 1125
+    m5: 260
+    m6: -270
+    m7: -460
+    m1: -888
+    m2: -936
+    m3: -120
+    m4: 1012
+    m5: 0
+    m6: -64
+    m7: -143
+    m1: 400
+    m2: 49
+    m3: -90
+    m4: -198
+    m5: 315
+    m6: 45
+    m7: -5
+    m1: -805
+    m2: -352
+    m3: 216
+    m4: -161
+    m5: -255
+    m6: -45
+    m7: 540
+    m1: 504
+    m2: 184
+    m3: -180
+    m4: 84
+    m5: 395
+    m6: 20
+    m7: 63
+    m1: -5
+    m2: 135
+    m3: 0
+    m4: -16
+    m5: 126
+    m6: 140
+    m7: 210
+    m1: 84
+    m2: 18
+    m3: 0
+    m4: -54
+    m5: -270
+    m6: -40
+    m7: -300
+    m1: 170
+    m2: -199
+    m3: 264
+    m4: -1005
+    m5: 899
+    m6: 308
+    m7: -280
+    m1: 2449
+    m2: 455
+    m3: -432
+    m4: -774
+    m5: 1416
+    m6: -266
+    m7: -260
+    m1: 832
+    m2: -252
+    m3: -350
+    m4: 156
+    m5: 1071
+    m6: 1
+    m7: -17
+    m1: -517
+    m2: -444
+    m3: -504
+    m4: 506
+    m5: 35
+    m6: 320
+    m7: -132
+    m1: -288
+    m2: -84
+    m3: 120
+    m4: 0
+    m5: -144
+    m6: -4
+    m7: 72
+    m1: 1476
+    m2: 847
+    m3: 90
+    m4: -814
+    m5: 546
+    m6: -100
+    m7: 16
+    m1: -300
+    m2: 10
+    m3: 363
+    m4: -16
+    m5: 100
+    m6: -169
+    m7: 456
+    m1: 66
+    m2: 48
+    m3: -18
+    m4: 108
+    m5: 342
+    m6: 180
+    m7: 64
+    m1: 1960
+    m2: 1260
+    m3: -842
+    m4: -268
+    m5: 1420
+    m6: 381
+    m7: 556
+    m1: 9768
+    m2: 5883
+    m3: -56
+    m4: -760
+    m5: 4107
+    m6: 1971
+    m7: -1344
+    m1: 5330
+    m2: 2584
+    m3: 60
+    m4: -560
+    m5: 2948
+    m6: 252
+    m7: 132
+    m1: -616
+    m2: -178
+    m3: 160
+    m4: 45
+    m5: -366
+    m6: -36
+    m7: 112
+    m1: 385
+    m2: 420
+    m3: -24
+    m4: 93
+    m5: 50
+    m6: 90
+    m7: -50
+    m1: 4983
+    m2: 3240
+    m3: -124
+    m4: -178
+    m5: 2205
+    m6: 899
+    m7: -124
+    m1: -132
+    m2: -805
+    m3: 16
+    m4: 54
+    m5: 713
+    m6: -1470
+    m7: 1425
+    m1: 1539
+    m2: 903
+    m3: -12
+    m4: -91
+    m5: 1368
+    m6: 158
+    m7: 1258
+    m1: 18531
+    m2: 10044
+    m3: -746
+    m4: 948
+    m5: 10137
+    m6: -169
+    m7: 4288
+    m1: 1488
+    m2: -1334
+    m3: -102
+    m4: -110
+    m5: 1782
+    m6: -4130
+    m7: 2190
+    m1: 720
+    m2: -31
+    m3: 42
+    m4: -12
+    m5: 957
+    m6: -819
+    m7: 1386
+    m1: 13
+    m2: -147
+    m3: 20
+    m4: 39
+    m5: -30
+    m6: -396
+    m7: 0
+    m1: -231
+    m2: 20
+    m3: 286
+    m4: -2
+    m5: -352
+    m6: -13
+    m7: -420
+    m1: 640
+    m2: -864
+    m3: -126
+    m4: -64
+    m5: -370
+    m6: -2310
+    m7: -1600
+    m1: 0
+    m2: 1430
+    m3: 3
+    m4: 27
+    m5: 432
+    m6: 2992
+    m7: 876
+    m1: -206
+    m2: -432
+    m3: -48
+    m4: 23
+    m5: -2035
+    m6: -833
+    m7: -4410
+    m1: 612
+    m2: 2067
+    m3: -252
+    m4: -327
+    m5: -3010
+    m6: 3928
+    m7: -5705
+    m1: -3520
+    m2: 75
+    m3: 80
+    m4: 252
+    m5: 0
+    m6: 3496
+    m7: 3058
+    m1: -680
+    m2: -195
+    m3: -35
+    m4: 169
+    m5: 460
+    m6: 234
+    m7: 1296
+    m1: 80
+    m2: -18
+    m3: 110
+    m4: 0
+    m5: 18
+    m6: -247
+    m7: 10
+    m1: 84
+    m2: 10
+    m3: 0
+    m4: -96
+    m5: -18
+    m6: 70
+    m7: 21
+    m1: -225
+    m2: 396
+    m3: 13
+    m4: -80
+    m5: -390
+    m6: 1036
+    m7: -469
+    m1: 2128
+    m2: -414
+    m3: -285
+    m4: 3
+    m5: 830
+    m6: -2660
+    m7: -596
+    m1: 2907
+    m2: 700
+    m3: -18
+    m4: -286
+    m5: -830
+    m6: -1431
+    m7: -4060
+    m1: 178
+    m2: 438
+    m3: 143
+    m4: 67
+    m5: -17
+    m6: 436
+    m7: -285
+    m1: 80396
+    m2: 38478
+    m3: -1114
+    m4: 2637
+    m5: 41585
+    m6: -1711
+    m7: 927
+    m1: 7680
+    m2: 5474
+    m3: 0
+    m4: -702
+    m5: 2444
+    m6: 1980
+    m7: -1734
+    m1: 4270
+    m2: 2961
+    m3: 200
+    m4: -864
+    m5: 1680
+    m6: 741
+    m7: -46
+    m1: 574
+    m2: 89
+    m3: 114
+    m4: 352
+    m5: 348
+    m6: 70
+    m7: -360
+    m1: 138
+    m2: -216
+    m3: -84
+    m4: 102
+    m5: 216
+    m6: -104
+    m7: -60
+    m1: 4075
+    m2: 2340
+    m3: -284
+    m4: 276
+    m5: 1584
+    m6: 357
+    m7: -868
+    m1: -402
+    m2: -700
+    m3: 0
+    m4: 6
+    m5: 832
+    m6: -980
+    m7: 2112
+    m1: 2205
+    m2: 589
+    m3: -147
+    m4: -84
+    m5: 1216
+    m6: -896
+    m7: 171
+    m1: 14202
+    m2: 7907
+    m3: 1790
+    m4: 148
+    m5: 7623
+    m6: 340
+    m7: 3223
+    m1: 4170
+    m2: 2414
+    m3: -132
+    m4: -146
+    m5: 1508
+    m6: 84
+    m7: -644
+    m1: 2533
+    m2: 1672
+    m3: 75
+    m4: -370
+    m5: 888
+    m6: 54
+    m7: -12
+    m1: 923
+    m2: 372
+    m3: 114
+    m4: -66
+    m5: 427
+    m6: -144
+    m7: -110 ...snip... 9 470 476 424 333 518 383
+    708 570 919 853 537 718 693 733 507 691 672 495 727 836 719 654 673 709 814 830 616 711 614 527 732 566 703 735 762 578 684 627
+    558 509 880 686 521 585 552 595 482 589 567 415 671 805 733 587 661 609 742 709 441 669 553 558 749 480 500 646 659 499 562 556
+    648 477 825 606 499 632 648 609 460 462 575 357 607 729 617 503 742 600 706 770 580 713 641 556 608 507 638 575 622 432 617 525
+    689 595 784 743 527 730 729 660 443 683 632 496 600 829 801 637 719 694 691 805 671 692 593 566 772 538 665 807 675 549 635 559
+    640 524 816 665 439 679 601 634 410 536 668 468 712 771 738 613 675 683 674 856 558 709 614 539 646 522 599 658 559 511 649 537
+    776 662 920 808 578 769 809 717 627 640 651 580 751 932 841 705 748 822 802 889 678 885 684 674 730 639 640 777 771 591 784 611
+    591 497 649 625 508 602 655 620 403 473 508 381 567 722 601 625 697 568 562 717 625 670 524 471 653 535 538 636 554 381 537 500
+    643 546 893 721 556 676 695 764 466 630 682 518 690 892 878 594 727 609 704 883 620 818 608 610 787 535 537 787 692 504 736 538
+    706 526 823 791 614 765 801 705 529 664 658 595 712 895 686 709 834 769 726 871 742 785 688 636 782 722 654 804 717 517 766 605
+    651 529 791 890 528 739 729 761 462 600 633 548 763 847 719 662 781 675 725 860 599 793 572 553 714 643 591 719 651 525 750 540
+    681 607 880 754 508 760 750 687 518 609 652 589 620 841 770 663 705 775 778 857 657 715 682 645 753 603 699 749 706 611 743 629
+    589 445 628 548 566 574 558 593 439 478 549 382 523 672 520 576 548 529 517 642 518 571 402 411 586 539 504 577 541 483 562 491
+    586 488 781 605 535 631 539 670 459 523 485 365 585 767 655 648 617 608 584 649 471 623 488 455 694 473 495 630 591 474 633 456
+    706 539 834 778 564 794 723 713 526 675 720 520 691 788 716 665 718 754 767 882 708 685 671 551 796 644 643 829 690 574 666 626
+    575 486 686 660 476 668 627 637 471 512 603 378 637 698 538 609 599 620 607 771 535 604 507 517 590 530 549 540 532 409 575 499
+    659 445 746 634 521 589 650 728 487 508 676 444 623 721 720 616 633 521 637 726 630 662 529 546 715 476 465 737 610 461 617 504
+    733 589 893 789 464 804 699 641 555 654 696 497 817 772 722 643 722 824 821 914 636 765 733 588 700 643 614 782 659 554 746 639
+    759 606 882 815 629 873 860 840 552 692 771 590 739 968 712 687 751 743 773 943 724 753 691 582 791 702 661 815 697 522 776 599
+    598 453 890 722 534 673 639 767 526 532 607 453 639 779 715 695 708 601 684 770 577 714 612 547 692 545 605 633 652 519 660 613
+    554 460 762 638 477 699 556 677 378 486 458 406 564 709 660 623 658 569 606 687 544 550 550 464 673 464 616 581 532 464 587 466
+    649 541 755 658 557 768 732 675 498 566 581 513 614 776 682 627 655 644 625 787 613 683 553 546 708 654 560 674 587 505 689 590
+    564 488 706 630 457 700 638 577 455 540 548 508 565 789 643 604 639 686 669 762 606 607 576 562 592 538 539 579 549 432 653 486
+    583 552 748 684 493 721 613 557 438 574 546 549 538 845 691 488 673 639 657 758 537 723 579 561 684 525 550 664 569 469 690 506
+    739 539 785 645 555 738 739 742 523 586 727 435 653 838 652 685 710 742 742 853 675 668 651 589 749 579 635 700 656 514 666 559
+    754 532 861 719 582 765 770 779 477 644 683 518 692 922 794 691 808 694 704 833 637 749 632 548 769 633 671 768 642 508 741 572
+    540 487 712 596 499 548 532 601 429 476 433 371 477 772 670 562 612 560 565 644 490 634 487 439 634 380 525 591 565 488 559 399
+    466 424 708 597 443 521 576 647 426 388 449 434 530 663 611 625 636 498 562 664 515 598 483 560 587 386 542 498 547 419 617 469
+    694 608 867 880 577 709 753 762 527 614 749 550 741 841 730 719 732 738 741 897 642 785 623 657 802 625 587 806 699 573 699 612
+    768 530 877 788 549 821 802 781 477 644 703 501 645 872 769 645 791 685 713 883 726 758 684 541 735 662 749 767 671 498 710 558
+    589 469 665 643 461 702 608 615 414 525 604 478 600 747 675 594 691 682 655 737 581 646 600 541 672 530 526 685 552 473 635 477
+    770 556 767 817 633 769 700 753 568 588 626 550 743 811 687 707 770 808 761 884 763 835 673 654 823 626 600 818 723 569 697 519</pre></td>
+    <td class="cell c4 lastcol" style=""><i class="icon fa fa-check text-success fa-fw " title="Pravilno" role="img" aria-label="Pravilno"></i></td>
+    </tr>
+    </tbody>
+    </table>
+    <p>Passed all tests! &nbsp;<i class="icon fa fa-check text-success fa-fw " title="Pravilno" role="img" aria-label="Pravilno"></i></p></div></div><div class="rightanswer"><div class="sample code"><h4>Question author's solution (Java):</h4><textarea class="coderunner-answer edit_code" name="q654788:1_sampleanswer" id="id_q654788:1_sampleanswer" spellcheck="false" rows="18" data-params="{}" data-globalextra="" data-lang="Java" data-test0="" readonly="" style="display: none;">import java.util.Scanner;
+    
+    
+    
+    class Matrix {
+    
+    
+    
+        private int[][] m;
+    
+    
+    
+        public int n; //only square matrices
+    
+        public Matrix(int n){
+    
+            this.n = n;
+    
+            m = new int[n][n];
+    
+        }
+    
+    
+    
+        public void setV(int i, int j, int val){
+    
+            m[i][j] = val;
+    
+        }
+    
+    
+    
+        public int v(int i, int j){
+    
+            return m[i][j];
+    
+        }
+    
+    
+    
+        public Matrix getSubmatrix(int startRow, int startCol, int dim){
+    
+            Matrix subM = new Matrix(dim);
+    
+            for (int i = 0; i&lt;dim ; i++ )
+    
+                for (int j=0;j&lt;dim ; j++ )
+    
+                    subM.setV(i,j, m[startRow+i][startCol+j]);
+    
+    
+    
+            return subM;
+    
+        }
+    
+    
+    
+        public void putSubmatrix(int startRow, int startCol, Matrix b){
+    
+            for (int i = 0; i&lt;b.n ; i++ )
+    
+                for (int j=0;j&lt;b.n ; j++ )
+    
+                    setV(startRow+i,startCol+j, b.v(i,j));
+    
+        }
+    
+    
+    
+        public Matrix sum(Matrix b){
+    
+            Matrix c = new Matrix(n);
+    
+            for(int i = 0; i&lt; n;i++){
+    
+                for(int j = 0; j&lt;n;j++){
+    
+                    c.setV(i, j, m[i][j]+b.v(i, j));
+    
+                }
+    
+            }
+    
+            return c;
+    
+        }
+    
+    
+    
+        public int sumAll(){
+    
+            int result = 0;
+    
+            for(int i = 0; i&lt; n;i++)
+    
+                for(int j = 0; j&lt;n;j++)
+    
+                    result += m[i][j];
+    
+    
+    
+            return result;
+    
+        }
+    
+    
+    
+    
+    
+        public Matrix sub(Matrix b){
+    
+            Matrix c = new Matrix(n);
+    
+            for(int i = 0; i&lt; n;i++){
+    
+                for(int j = 0; j&lt;n;j++){
+    
+                    c.setV(i, j, m[i][j]-b.v(i, j));
+    
+                }
+    
+            }
+    
+            return c;
+    
+        }
+    
+    
+    
+        //simple multiplication
+    
+        public Matrix mult(Matrix b){
+    
+            Matrix c = new Matrix(n);
+    
+            for(int i = 0; i&lt; n;i++){
+    
+                for(int j = 0; j&lt;n;j++){
+    
+                    int prod = 0;
+    
+                    for (int k = 0; k &lt; n; k++) {
+    
+                        prod+=m[i][k]*b.v(k, j);
+    
+                    }
+    
+                    c.setV(i, j, prod);
+    
+                }
+    
+            }
+    
+            return c;
+    
+        }
+    
+    
+    
+        public Matrix multStrassen(Matrix b, int cutoff){
+    
+            if (n &lt;= cutoff)
+    
+                return this.mult(b);
+    
+    
+    
+            Matrix c = new Matrix(n);
+    
+            Matrix a11 = getSubmatrix(0, 0, n/2);
+    
+            Matrix a12 = getSubmatrix(0, n/2, n/2);
+    
+            Matrix a21 = getSubmatrix(n/2, 0, n/2);
+    
+            Matrix a22 = getSubmatrix(n/2, n/2, n/2);
+    
+    
+    
+            Matrix b11 = b.getSubmatrix(0, 0, n/2);
+    
+            Matrix b12 = b.getSubmatrix(0, n/2, n/2);
+    
+            Matrix b21 = b.getSubmatrix(n/2, 0, n/2);
+    
+            Matrix b22 = b.getSubmatrix(n/2, n/2, n/2);
+    
+    
+    
+            Matrix m1 = a11.sum(a22).multStrassen(b11.sum(b22), cutoff); //(a11+a22)(b11+b22)
+    
+            Matrix m2 = a21.sum(a22).multStrassen(b11, cutoff); //(a21+a22)b11
+    
+            Matrix m3 = a11.multStrassen(b12.sub(b22), cutoff); // a11(b12-b22)
+    
+            Matrix m4 = a22.multStrassen(b21.sub(b11), cutoff); //a22(b21-b11)
+    
+            Matrix m5 = a11.sum(a12).multStrassen(b22, cutoff); //(a11+a12)b22
+    
+            Matrix m6 = a21.sub(a11).multStrassen(b11.sum(b12), cutoff); //(a21-a11)(b11+b12)
+    
+            Matrix m7 = a12.sub(a22).multStrassen(b21.sum(b22), cutoff); //(a12-a22)(b21+b22)
+    
+    
+    
+            System.out.printf("m1: %d\n", m1.sumAll());
+    
+            System.out.printf("m2: %d\n", m2.sumAll());
+    
+            System.out.printf("m3: %d\n", m3.sumAll());
+    
+            System.out.printf("m4: %d\n", m4.sumAll());
+    
+            System.out.printf("m5: %d\n", m5.sumAll());
+    
+            System.out.printf("m6: %d\n", m6.sumAll());
+    
+            System.out.printf("m7: %d\n", m7.sumAll());
+    
+    
+    
+            Matrix c11 = m1.sum(m4).sub(m5).sum(m7); // m1+m4-m5+m7
+    
+            Matrix c12 = m3.sum(m5); // m3+m5
+    
+            Matrix c21 = m2.sum(m4); // m2+m4
+    
+            Matrix c22 = m1.sub(m2).sum(m3).sum(m6);//m1-m2+m3+m6
+    
+    
+    
+            c.putSubmatrix(0,0, c11);
+    
+            c.putSubmatrix(0,n/2, c12);
+    
+            c.putSubmatrix(n/2,0, c21);
+    
+            c.putSubmatrix(n/2,n/2, c22);
+    
+            return c;
+    
+    
+    
+        }
+    
+    
+    
+        public String toString(){
+    
+            String s = "";
+    
+            for(int i = 0; i&lt; m.length;i++){
+    
+                for(int j = 0; j&lt;m[0].length;j++){
+    
+                    s+=m[i][j]+" ";
+    
+                }
+    
+                s+="\n";
+    
+            }
+    
+    
+    
+            return s;
+    
+        }
+    
+    
+    
+    }
+    
+    
+    
+    
+    
+    public class Izziv6{
+    
+    
+    
+        public static void main(String[] args) {
+    
+            Scanner sc = new Scanner(System.in);
+    
+            int n = sc.nextInt();
+    
+            int cutoff = sc.nextInt();
+    
+            Matrix a = new Matrix(n);
+    
+            Matrix b = new Matrix(n);
+    
+    
+    
+            for ( int i = 0; i&lt;n ; i++ )
+    
+                for ( int j = 0; j&lt;n ; j++ )
+    
+                    a.setV(i,j,sc.nextInt());
+    
+    
+    
+            for ( int i = 0; i&lt;n ; i++ )
+    
+                for ( int j = 0; j&lt;n ; j++ )
+    
+                    b.setV(i,j,sc.nextInt());
+    
+    
+    
+            System.out.println(a.multStrassen(b, cutoff));
+    
+    
+        }
+    
+    
+    
+    }
+    
+    </textarea><div id="id_q654788:1_sampleanswer_wrapper" class="ui_wrapper" style="resize: vertical; overflow: hidden; min-height: 411px; width: 100%; border: 1px solid darkgrey;"><div class=" ace_editor ace-tm" style="resize: none; height: 395px; width: 505.094px;"><textarea class="ace_text-input" wrap="off" autocorrect="off" autocapitalize="off" spellcheck="false" readonly="" style="opacity: 0; font-size: 1px; height: 1px; width: 1px; top: 18px; left: 54px;" id="ace_id_q654788:1_sampleanswer"></textarea><div class="ace_gutter moodle-has-zindex" aria-hidden="true" style="left: 0px; width: 51px;"><div class="ace_layer ace_gutter-layer ace_folding-enabled" style="height: 1e+06px; top: 0px; left: 0px; width: 51px;"><div class="ace_gutter-cell ace_gutter-active-line " style="height: 18px; top: 0px;">1<span style="display: inline-block; height: 18px;" class="ace_fold-widget ace_start ace_open"></span></div><div class="ace_gutter-cell " style="height: 18px; top: 18px;">2<span style="display: none;"></span></div><div class="ace_gutter-cell " style="height: 18px; top: 36px;">3<span style="display: none;"></span></div><div class="ace_gutter-cell " style="height: 18px; top: 54px;">4<span style="display: none;"></span></div><div class="ace_gutter-cell " style="height: 18px; top: 72px;">5<span style="display: inline-block; height: 18px;" class="ace_fold-widget ace_start ace_open"></span></div><div class="ace_gutter-cell " style="height: 18px; top: 90px;">6<span style="display: none;"></span></div><div class="ace_gutter-cell " style="height: 18px; top: 108px;">7<span style="display: none;"></span></div><div class="ace_gutter-cell " style="height: 18px; top: 126px;">8<span style="display: none;"></span></div><div class="ace_gutter-cell " style="height: 18px; top: 144px;">9<span style="display: none;"></span></div><div class="ace_gutter-cell " style="height: 18px; top: 162px;">10<span style="display: none;"></span></div><div class="ace_gutter-cell " style="height: 18px; top: 180px;">11<span style="display: none;"></span></div><div class="ace_gutter-cell " style="height: 18px; top: 198px;">12<span style="display: none;"></span></div><div class="ace_gutter-cell " style="height: 18px; top: 216px;">13<span style="display: none;"></span></div><div class="ace_gutter-cell " style="height: 18px; top: 234px;">14<span style="display: none;"></span></div><div class="ace_gutter-cell " style="height: 18px; top: 252px;">15<span style="display: inline-block; height: 18px;" class="ace_fold-widget ace_start ace_open"></span></div><div class="ace_gutter-cell " style="height: 18px; top: 270px;">16<span style="display: none;"></span></div><div class="ace_gutter-cell " style="height: 18px; top: 288px;">17<span style="display: none;"></span></div><div class="ace_gutter-cell " style="height: 18px; top: 306px;">18<span style="display: none;"></span></div><div class="ace_gutter-cell " style="height: 18px; top: 324px;">19<span style="display: none;"></span></div><div class="ace_gutter-cell " style="height: 18px; top: 342px;">20<span style="display: none;"></span></div><div class="ace_gutter-cell " style="height: 18px; top: 360px;">21<span style="display: none;"></span></div><div class="ace_gutter-cell " style="height: 18px; top: 378px;">22<span style="display: none;"></span></div><div class="ace_gutter-cell " style="height: 18px; top: 396px;">23<span style="display: none;"></span></div></div></div><div class="ace_scroller" style="line-height: 18px; left: 50.4141px; right: 17px; bottom: 0px;"><div class="ace_content" style="top: 0px; left: 0px; width: 738px; height: 414px;"><div class="ace_layer ace_print-margin-layer"><div class="ace_print-margin" style="left: 661px; visibility: visible;"></div></div><div class="ace_layer ace_marker-layer"><div class="ace_active-line" style="height: 18px; top: 0px; left: 0px; right: 0px;"></div></div><div class="ace_layer ace_text-layer" style="height: 1e+06px; margin: 0px 4px; top: 0px; left: 0px;"><div class="ace_line" style="height: 18px; top: 0px;"><span class="ace_keyword">import</span> <span class="ace_identifier">java</span>.<span class="ace_identifier">util</span>.<span class="ace_identifier">Scanner</span>;</div><div class="ace_line" style="height: 18px; top: 18px;"></div><div class="ace_line" style="height: 18px; top: 36px;"></div><div class="ace_line" style="height: 18px; top: 54px;"></div><div class="ace_line" style="height: 18px; top: 72px;"><span class="ace_keyword">class</span> <span class="ace_identifier">Matrix</span> {</div><div class="ace_line" style="height: 18px; top: 90px;"></div><div class="ace_line" style="height: 18px; top: 108px;"></div><div class="ace_line" style="height: 18px; top: 126px;"></div><div class="ace_line" style="height: 18px; top: 144px;">    <span class="ace_keyword">private</span> <span class="ace_keyword">int</span>[][] <span class="ace_identifier">m</span>;</div><div class="ace_line" style="height: 18px; top: 162px;"></div><div class="ace_line" style="height: 18px; top: 180px;"></div><div class="ace_line" style="height: 18px; top: 198px;"></div><div class="ace_line" style="height: 18px; top: 216px;">    <span class="ace_keyword">public</span> <span class="ace_keyword">int</span> <span class="ace_identifier">n</span>; <span class="ace_comment">//only square matrices</span></div><div class="ace_line" style="height: 18px; top: 234px;"></div><div class="ace_line" style="height: 18px; top: 252px;">    <span class="ace_keyword">public</span> <span class="ace_identifier">Matrix</span>(<span class="ace_keyword">int</span> <span class="ace_identifier">n</span>){</div><div class="ace_line" style="height: 18px; top: 270px;"></div><div class="ace_line" style="height: 18px; top: 288px;"><span class="ace_indent-guide">    </span>    <span class="ace_keyword">this</span>.<span class="ace_identifier">n</span> <span class="ace_keyword ace_operator">=</span> <span class="ace_identifier">n</span>;</div><div class="ace_line" style="height: 18px; top: 306px;"></div><div class="ace_line" style="height: 18px; top: 324px;"><span class="ace_indent-guide">    </span>    <span class="ace_identifier">m</span> <span class="ace_keyword ace_operator">=</span> <span class="ace_keyword">new</span> <span class="ace_keyword">int</span>[<span class="ace_identifier">n</span>][<span class="ace_identifier">n</span>];</div><div class="ace_line" style="height: 18px; top: 342px;"></div><div class="ace_line" style="height: 18px; top: 360px;">    }</div><div class="ace_line" style="height: 18px; top: 378px;"></div></div><div class="ace_layer ace_marker-layer"></div><div class="ace_layer ace_cursor-layer ace_hidden-cursors"><div class="ace_cursor" style="display: block; top: 0px; left: 4px; width: 8px; height: 18px;"></div></div></div></div><div class="ace_scrollbar ace_scrollbar-v" style="width: 22px; bottom: 17px;"><div class="ace_scrollbar-inner" style="width: 22px; height: 5796px;">&nbsp;</div></div><div class="ace_scrollbar ace_scrollbar-h" style="height: 22px; left: 50.4141px; right: 17px;"><div class="ace_scrollbar-inner" style="height: 22px; width: 738px;">&nbsp;</div></div><div style="height: auto; width: auto; top: 0px; left: 0px; visibility: hidden; position: absolute; white-space: pre; font: inherit; overflow: hidden;"><div style="height: auto; width: auto; top: 0px; left: 0px; visibility: hidden; position: absolute; white-space: pre; font: inherit; overflow: visible;">הההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההההה</div><div style="height: auto; width: auto; top: 0px; left: 0px; visibility: hidden; position: absolute; white-space: pre; font-style: inherit; font-variant: inherit; font-stretch: inherit; font-size: inherit; line-height: inherit; font-family: inherit; font-optical-sizing: inherit; font-kerning: inherit; font-feature-settings: inherit; font-variation-settings: inherit; overflow: visible;">XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX</div></div></div></div></div></div></div><div class="im-feedback"><div class="correctness badge correct">Pravilno</div><div class="gradingdetails">Točke za ta prispevek: 1,00/1,00.</div></div></div></div></div>
