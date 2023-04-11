@@ -153,14 +153,14 @@ class Matrix {
             c.putSubmatrix(0, c.n/2, c12);
             c.putSubmatrix(c.n/2, 0, c21);
             c.putSubmatrix(c.n/2, c.n/2, c22);
-            //print m_1-7
+            /* //print m_1-7
             System.out.printf("m1: %d\n",m1.sumEl());
             System.out.printf("m2: %d\n",m2.sumEl());
             System.out.printf("m3: %d\n",m3.sumEl());
             System.out.printf("m4: %d\n",m4.sumEl());
             System.out.printf("m5: %d\n",m5.sumEl());
             System.out.printf("m6: %d\n",m6.sumEl());
-            System.out.printf("m7: %d\n",m7.sumEl());
+            System.out.printf("m7: %d\n",m7.sumEl()); */
             return c;
         }
 	}
